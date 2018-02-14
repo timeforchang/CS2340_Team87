@@ -32,6 +32,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -41,6 +42,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(HomeScreenActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

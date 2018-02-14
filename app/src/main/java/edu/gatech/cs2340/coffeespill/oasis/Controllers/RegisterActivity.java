@@ -3,6 +3,7 @@ package edu.gatech.cs2340.coffeespill.oasis.Controllers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -43,14 +44,25 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(RegisterActivity.this, HomeScreenActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void registerUser(String email, final String pass) {
         auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()) {
                     System.out.println("error signing up");
+                    Snackbar snack = Snackbar.make(findViewById(R.id.registerScreen), "register unsuccessful", Snackbar.LENGTH_LONG);
+                    snack.show();
                 } else {
                     System.out.println("sign up successful");
+                    Snackbar snack = Snackbar.make(findViewById(R.id.registerScreen), "register successful, please login", Snackbar.LENGTH_LONG);
+                    snack.show();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();
                 }

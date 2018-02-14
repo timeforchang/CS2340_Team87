@@ -38,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null) {
             Intent intent = new Intent(LoginActivity.this, UserInfoActivity.class);
             startActivity(intent);
+            finish();
         }
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +47,13 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(loginEmail.getText().toString(), loginPass.getText().toString());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(LoginActivity.this, HomeScreenActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void loginUser(String email, final String pass) {
