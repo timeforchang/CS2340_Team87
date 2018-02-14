@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -61,8 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                     snack.show();
                 } else {
                     System.out.println("sign up successful");
-                    Snackbar snack = Snackbar.make(findViewById(R.id.registerScreen), "register successful, please login", Snackbar.LENGTH_LONG);
-                    snack.show();
+                    Toast.makeText(RegisterActivity.this, "Register Successful!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();
                 }
