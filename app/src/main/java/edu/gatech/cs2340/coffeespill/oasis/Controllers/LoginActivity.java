@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Snackbar snack = Snackbar.make(findViewById(R.id.loginScreen), "logging you in...", Snackbar.LENGTH_LONG);
+                snack.show();
                 loginUser(loginEmail.getText().toString(), loginPass.getText().toString());
             }
         });
