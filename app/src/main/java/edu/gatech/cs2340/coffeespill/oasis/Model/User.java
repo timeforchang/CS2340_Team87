@@ -1,16 +1,20 @@
 package edu.gatech.cs2340.coffeespill.oasis.Model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by andrew_chang on 2018-02-13.
  */
 
 public class User {
-    private static int nextId = 0;
     private int _id;
     private String _username;
     private String _pWord;
     private boolean _locked;
     private String _contact;
+
+    public static List<String> userTypes = Arrays.asList("User", "Employee", "Admin");
 
     public int getId() { return _id; }
 
@@ -27,7 +31,6 @@ public class User {
     public void setContact(String cont) { _contact = cont; }
 
     public User(String uName, String pWord, String cont) {
-        _id = User.nextId++;
         _username = cont;
         _pWord = pWord;
         _contact = cont;

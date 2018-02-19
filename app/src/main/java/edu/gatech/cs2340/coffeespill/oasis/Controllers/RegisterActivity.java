@@ -1,20 +1,31 @@
 package edu.gatech.cs2340.coffeespill.oasis.Controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.*;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
 
+import edu.gatech.cs2340.coffeespill.oasis.Model.User;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -23,8 +34,10 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
 
 public class RegisterActivity extends AppCompatActivity {
     Button register;
-    EditText registerEmail, registerPass;
+    EditText registerEmail, registerPass, registerName;
     private FirebaseAuth auth;
+    private FirebaseFirestore db;
+    private Spinner typeSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +47,15 @@ public class RegisterActivity extends AppCompatActivity {
         register = (Button) findViewById(R.id.register);
         registerEmail = (EditText) findViewById(R.id.registerEmail);
         registerPass = (EditText) findViewById(R.id.registerPass);
+        typeSpinner = (Spinner) findViewById(R.id.userTypeSpinner);
+        registerName = (EditText) findViewById(R.id.registerName);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, User.userTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        typeSpinner.setAdapter(adapter);
 
         auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
-    private void registerUser(String email, final String pass) {
+    private void registerUser(final String email, final String pass) {
         auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -62,6 +82,16 @@ public class RegisterActivity extends AppCompatActivity {
                     snack.show();
                 } else {
                     System.out.println("sign up successful");
+
+                    Map<String, Object> newUser = new HashMap<>();
+                    newUser.put("id", auth.getUid());
+                    newUser.put("name", registerName.getText().toString());
+                    newUser.put("user type", (String) typeSpinner.getSelectedItem());
+                    newUser.put("email", email);
+                    newUser.put("password", pass);
+
+                    db.collection("users").add(newUser);
+
                     Toast.makeText(RegisterActivity.this, "Register Successful!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();
