@@ -19,6 +19,7 @@
         <activity android:name=".Controllers.LoginActivity"></activity>
         <activity android:name=".Controllers.RegisterActivity"></activity>
         <activity android:name=".Controllers.UserInfoActivity"></activity>
+        <activity android:name=".Controllers.ShelterListActivity"></activity>
     </application>
 
 </manifest>
