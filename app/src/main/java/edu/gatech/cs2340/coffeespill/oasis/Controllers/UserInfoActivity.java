@@ -16,8 +16,9 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
  */
 
 public class UserInfoActivity extends AppCompatActivity {
-    Button logout;
-    TextView userEmail;
+    private Button logout;
+    private Button checkShelter;
+    private TextView userEmail;
     private FirebaseAuth auth;
 
     @Override
@@ -25,6 +26,7 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         logout = (Button) findViewById(R.id.logout);
+        checkShelter = (Button) findViewById(R.id.checkShelter);
         userEmail = (TextView) findViewById(R.id.userEmail);
 
         auth = FirebaseAuth.getInstance();
@@ -37,6 +39,14 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 userLogout();
+            }
+        });
+
+
+        checkShelter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), ShelterDisplayActivity.class));
             }
         });
     }

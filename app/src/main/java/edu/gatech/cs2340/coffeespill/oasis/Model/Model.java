@@ -1,21 +1,10 @@
 package edu.gatech.cs2340.coffeespill.oasis.Model;
 
-import android.support.annotation.NonNull;
-import android.support.compat.BuildConfig;
-
 import com.google.android.gms.tasks.Task;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.Firestore;
-import com.google.api.core.ApiFuture;
-
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by andrew_chang on 2018-02-13.

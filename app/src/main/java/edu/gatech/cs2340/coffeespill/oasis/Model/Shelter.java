@@ -1,92 +1,141 @@
 package edu.gatech.cs2340.coffeespill.oasis.Model;
 
-import com.google.firebase.firestore.GeoPoint;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-/**
- * Created by andrew_chang on 2018-02-25.
- */
 
-public class Shelter {
-    private int _id;
-    private String _name;
-    private int _capacity;
-    private String _restrictions;
-    private GeoPoint _coordinates;
-    private String _address;
-    private String _notes;
-    private String _phone;
+public class Shelter implements Parcelable{
+    private int id;
+    private String name;
+    private Integer capacity;
+    private String restrictions;
+    private int longitude;
+    private int latitude;
+    private String address;
+    private String notes;
+    private String phone;
 
-    public Shelter(int id, String name, int capacity, GeoPoint coordinates, String address, String notes, String phone) {
-        _id = id;
-        _name = name;
-        _capacity = capacity;
-        _coordinates = coordinates;
-        _address = address;
-        _notes = notes;
-        _phone = phone;
+    protected Shelter(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        capacity = in.readInt();
+        restrictions = in.readString();
+        longitude = in.readInt();
+        latitude = in.readInt();
+        address = in.readString();
+        notes = in.readString();
+        phone = in.readString();
     }
 
-    public int get_id() {
-        return _id;
+    public Shelter() {
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public static final Creator<Shelter> CREATOR = new Creator<Shelter>() {
+        @Override
+        public Shelter createFromParcel(Parcel in) {
+            return new Shelter(in);
+        }
+
+        @Override
+        public Shelter[] newArray(int size) {
+            return new Shelter[size];
+        }
+    };
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String name) {
-        this._name = name;
+        this.name = name;
     }
 
-    public int getCapacity() {
-        return _capacity;
+    public Integer getCapacity() {
+        return capacity;
     }
 
-    public void setCapacity(int capacity) {
-        this._capacity = capacity;
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
     }
 
     public String getRestrictions() {
-        return _restrictions;
+        return restrictions;
     }
 
     public void setRestrictions(String restrictions) {
-        this._restrictions = restrictions;
+        this.restrictions = restrictions;
     }
 
-    public GeoPoint getCoordinates() {
-        return _coordinates;
+    public int getLongitude() {
+        return longitude;
     }
 
-    public void setCoordinates(GeoPoint coordinates) {
-        this._coordinates = coordinates;
+    public void setLongitude(int longitude) {
+        this.longitude = longitude;
+    }
+
+    public int getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(int latitude) {
+        this.latitude = latitude;
     }
 
     public String getAddress() {
-        return _address;
+        return address;
     }
 
     public void setAddress(String address) {
-        this._address = address;
+        this.address = address;
     }
 
     public String getNotes() {
-        return _notes;
+        return notes;
     }
 
     public void setNotes(String notes) {
-        this._notes = notes;
+        this.notes = notes;
     }
 
     public String getPhone() {
-        return _phone;
+        return phone;
     }
 
     public void setPhone(String phone) {
-        this._phone = phone;
+        this.phone = phone;
+    }
+
+    public Shelter(int _id, String _name, int _capacity, int _longitude, int _latitude, String _address, String _notes, String _phone) {
+        id = _id;
+        name = _name;
+        capacity = _capacity;
+        longitude = _longitude;
+        latitude = _latitude;
+        address = _address;
+        notes = _notes;
+        phone = _phone;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(name);
+        parcel.writeInt(capacity);
+        parcel.writeString(restrictions);
+        parcel.writeInt(longitude);
+        parcel.writeInt(latitude);
+        parcel.writeString(address);
+        parcel.writeString(notes);
+        parcel.writeString(phone);
     }
 }
