@@ -48,27 +48,14 @@ public class ShelterDisplayActivity extends AppCompatActivity {
                             Shelter shelter = document.toObject(Shelter.class);
                             shelters.add(shelter);
                         }
-
-//                        ListAdapter shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
-//                        customListView = (ListView) findViewById(R.id.shelterList);
-//                        customListView.setAdapter(shelterAdapter);
-//
-//                        customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                            @Override
-//                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                                Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
-//                                Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
-//                                intent.putExtra("shelter", shelter);
-//                                startActivity(intent);
-//                                finish();
-//                            }
-//                        });
+                        Log.d("list size", String.valueOf(shelters.size()));
                     } else {
                         Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                     }
                 }
             });
-        Log.d("success1", String.valueOf(shelters.size()));
+
+        Log.d("list size (outside)", String.valueOf(shelters.size()));
         ListAdapter shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
         customListView = (ListView) findViewById(R.id.shelterList);
         customListView.setAdapter(shelterAdapter);
