@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     tools:context="edu.gatech.cs2340.coffeespill.oasis.Controllers.ShelterDescriptionActivity">
 
-    <EditText
+    <TextView
         android:id="@+id/shelterDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        android:layout_alignParentTop="true" />
 </RelativeLayout>

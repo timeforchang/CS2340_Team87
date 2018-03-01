@@ -24,10 +24,7 @@ public class ShelterDescriptionActivity extends AppCompatActivity {
                 + shelter.getLongitude() + "\nAddress: "
                 + shelter.getAddress() + "\nSpecial Notes: " + shelter.getNotes()
                 + "\n Phone Number: " + shelter.getPhone();
-
         shelterDetails = (TextView) findViewById(R.id.shelterDetails);
-        shelterDetails.setText((shelterDetails.getText().toString()));
-
-
+        shelterDetails.setText(detail);
     }
 }
