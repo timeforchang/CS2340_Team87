@@ -29,6 +29,7 @@ public class ShelterDisplayActivity extends AppCompatActivity {
     private ListView customListView;
     private String FIRE_LOG = "Fire_log";
     private List<Shelter> shelters = new ArrayList<>();
+    private ListAdapter shelterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,35 +38,7 @@ public class ShelterDisplayActivity extends AppCompatActivity {
         Model model = Model.getInstance();
 
         mDB = FirebaseFirestore.getInstance();
-        shelters = model.getShelters();
-
-        mDB.collection("shelters")
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        ListAdapter shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
-                        customListView = (ListView) findViewById(R.id.shelterList);
-                        customListView.setAdapter(shelterAdapter);
-
-                        customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
-                                Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
-                                intent.putExtra("shelter", shelter);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                    } else {
-                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                    }
-                }
-            });
-        Log.d("success1", String.valueOf(shelters.size()));
-        ListAdapter shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
+        shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
         customListView = (ListView) findViewById(R.id.shelterList);
 
         mDB.collection("shelters")
