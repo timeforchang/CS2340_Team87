@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Snackbar snack = Snackbar.make(findViewById(R.id.loginScreen), "logging you in...", Snackbar.LENGTH_LONG);
+                System.out.println("logged in");
                 snack.show();
                 loginUser(loginEmail.getText().toString(), loginPass.getText().toString());
             }
