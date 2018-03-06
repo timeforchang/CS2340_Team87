@@ -39,8 +39,6 @@ public class ShelterDisplayActivity extends AppCompatActivity {
         mDB = FirebaseFirestore.getInstance();
         shelters = model.getShelters();
 
-       // initShelterList(shelters, mDB);
-
         mDB.collection("shelters")
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -69,41 +67,37 @@ public class ShelterDisplayActivity extends AppCompatActivity {
         Log.d("success1", String.valueOf(shelters.size()));
         ListAdapter shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
         customListView = (ListView) findViewById(R.id.shelterList);
-        customListView.setAdapter(shelterAdapter);
 
-        customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
-                Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
-                intent.putExtra("shelter", shelter);
-                startActivity(intent);
-                finish();
-            }
-        });
+        mDB.collection("shelters")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Shelter shelter = document.toObject(Shelter.class);
+                                shelters.add(shelter);
+                            }
+                            shelterAdapter = new CustomShelterAdapter(getApplicationContext(), shelters);
+                            customListView = (ListView) findViewById(R.id.shelterList);
+                            customListView.setAdapter(shelterAdapter);
+                            customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    Log.d("test", "3");
+                                    Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
+                                    Log.d("test", "4");
+                                    Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
+                                    intent.putExtra("shelter", shelter);
+                                    Log.d("test", "5");
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                        }
+                    }
+                });
     }
-
-//    public void initShelterList(final List<Shelter> shelters, FirebaseFirestore mDB) {
-//        mDB.collection("shelters")
-//            .get()
-//            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                        List<Shelter> temp = new ArrayList<>();
-//                        for (DocumentSnapshot document : task.getResult()) {
-//                            Shelter shelter = document.toObject(Shelter.class);
-//                            Log.d("dayin", shelter.getAddress());
-//                            shelters.add(shelter);
-//                        }
-//                          // Log.d("success1", String.valueOf(shelters.size()));
-//                       // shelters = temp;
-//                    } else {
-//                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-//                    }
-//                }
-//            });
-//    }
-
 }

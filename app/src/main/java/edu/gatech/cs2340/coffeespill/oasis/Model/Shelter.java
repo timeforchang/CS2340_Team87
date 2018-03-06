@@ -7,10 +7,23 @@ import android.os.Parcelable;
 public class Shelter implements Parcelable{
     private int id;
     private String name;
+
+    public Shelter(int id, String name, Integer capacity, String restrictions, double longitude, double latitude, String address, String notes, String phone) {
+        this.id = id;
+        this.name = name;
+        this.capacity = capacity;
+        this.restrictions = restrictions;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.address = address;
+        this.notes = notes;
+        this.phone = phone;
+    }
+
     private Integer capacity;
     private String restrictions;
-    private int longitude;
-    private int latitude;
+    private double longitude;
+    private double latitude;
     private String address;
     private String notes;
     private String phone;
@@ -20,8 +33,8 @@ public class Shelter implements Parcelable{
         name = in.readString();
         capacity = in.readInt();
         restrictions = in.readString();
-        longitude = in.readInt();
-        latitude = in.readInt();
+        longitude = in.readDouble();
+        latitude = in.readDouble();
         address = in.readString();
         notes = in.readString();
         phone = in.readString();
@@ -70,19 +83,19 @@ public class Shelter implements Parcelable{
         this.restrictions = restrictions;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(int latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -132,8 +145,8 @@ public class Shelter implements Parcelable{
         parcel.writeString(name);
         parcel.writeInt(capacity);
         parcel.writeString(restrictions);
-        parcel.writeInt(longitude);
-        parcel.writeInt(latitude);
+        parcel.writeDouble(longitude);
+        parcel.writeDouble(latitude);
         parcel.writeString(address);
         parcel.writeString(notes);
         parcel.writeString(phone);
