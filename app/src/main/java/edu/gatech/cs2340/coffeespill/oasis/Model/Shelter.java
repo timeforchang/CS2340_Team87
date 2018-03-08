@@ -151,4 +151,14 @@ public class Shelter implements Parcelable{
         parcel.writeString(notes);
         parcel.writeString(phone);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean ret = false;
+        if (o instanceof Shelter) {
+            Shelter ptr = (Shelter) o;
+            ret = ptr.getId() == this.id;
+        }
+        return ret;
+    }
 }

@@ -38,6 +38,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
     private List<Shelter> shelters = new ArrayList<>();
     private List<Shelter> filtered = new ArrayList<>();
     private ListAdapter shelterAdapter;
+    private int listCount = 0;
     Toolbar toolbar;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
@@ -132,8 +133,8 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         int pos = mDrawerList.getPositionForView(compoundButton);
-        Log.d("test", Integer.toString(pos));
-        if(pos != ListView.INVALID_POSITION) {
+        //Log.d("test", Integer.toString(pos));
+        if(pos != ListView.INVALID_POSITION || pos > 0) {
             Category c = categories.get(pos);
             c.setSelected(b);
             if(b) {
@@ -147,6 +148,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                         for (DocumentSnapshot document : task.getResult()) {
                                             Shelter shelter = document.toObject(Shelter.class);
                                             filtered.add(shelter);
+                                            listCount++;
                                             Log.d("test", shelter.getName());
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
@@ -181,6 +183,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                             Shelter shelter = document.toObject(Shelter.class);
                                             if (!filtered.contains(shelter)) {
                                                 filtered.add(shelter);
+                                                listCount++;
                                             }
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
@@ -214,6 +217,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                         for (DocumentSnapshot document : task.getResult()) {
                                             Shelter shelter = document.toObject(Shelter.class);
                                             filtered.add(shelter);
+                                            listCount++;
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
                                         customListView = (ListView) findViewById(R.id.shelterList);
@@ -236,6 +240,11 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                     }
                                 }
                             });
+                    categories.get(5).setSelected(false);
+                    sideA = new SidebarAdapter(this, categories);
+                    //Log.d("test", sideA.toString());
+                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                    this.mDrawerList.setAdapter(sideA);
                 } else if(pos == 3) {
                     mDB.collection("shelters").whereEqualTo("restrictions", "children")
                             .get()
@@ -246,6 +255,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                         for (DocumentSnapshot document : task.getResult()) {
                                             Shelter shelter = document.toObject(Shelter.class);
                                             filtered.add(shelter);
+                                            listCount++;
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
                                         customListView = (ListView) findViewById(R.id.shelterList);
@@ -278,6 +288,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                             Shelter shelter = document.toObject(Shelter.class);
                                             if (!filtered.contains(shelter)) {
                                                 filtered.add(shelter);
+                                                listCount++;
                                             }
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
@@ -311,6 +322,8 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                             Shelter shelter = document.toObject(Shelter.class);
                                             if (!filtered.contains(shelter)) {
                                                 filtered.add(shelter);
+                                                listCount++;
+                                                Log.d("test", shelter.toString());
                                             }
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
@@ -344,6 +357,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                             Shelter shelter = document.toObject(Shelter.class);
                                             if (!filtered.contains(shelter)) {
                                                 filtered.add(shelter);
+                                                listCount++;
                                             }
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
@@ -367,7 +381,11 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                     }
                                 }
                             });
-
+                    categories.get(5).setSelected(false);
+                    sideA = new SidebarAdapter(this, categories);
+                    //Log.d("test", sideA.toString());
+                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                    this.mDrawerList.setAdapter(sideA);
                 } else if(pos == 4) {
                     mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
                             .get()
@@ -379,6 +397,8 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                             Shelter shelter = document.toObject(Shelter.class);
                                             if (!filtered.contains(shelter)) {
                                                 filtered.add(shelter);
+                                                listCount++;
+                                                Log.d("test", shelter.toString());
                                             }
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
@@ -402,17 +422,26 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                     }
                                 }
                             });
+                    categories.get(5).setSelected(false);
+                    sideA = new SidebarAdapter(this, categories);
+                    //Log.d("test", sideA.toString());
+                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                    this.mDrawerList.setAdapter(sideA);
                 } else {
-                    mDB.collection("shelters")
+                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     if (task.isSuccessful()) {
-                                        filtered.clear();
                                         for (DocumentSnapshot document : task.getResult()) {
                                             Shelter shelter = document.toObject(Shelter.class);
-                                            filtered.add(shelter);
+                                            int index = filtered.indexOf(shelter);
+                                            if (index >= 0) {
+                                                filtered.remove(index);
+                                                listCount--;
+                                            }
+
                                         }
                                         shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
                                         customListView = (ListView) findViewById(R.id.shelterList);
@@ -435,7 +464,167 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
                                     }
                                 }
                             });
+                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Shelter shelter = document.toObject(Shelter.class);
+                                            int index = filtered.indexOf(shelter);
+                                            if (index >= 0) {
+                                                filtered.remove(index);
+                                                listCount--;
+                                            }
+                                        }
+                                        shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
+                                        customListView = (ListView) findViewById(R.id.shelterList);
+                                        customListView.setAdapter(shelterAdapter);
+                                        customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                Log.d("test", "3");
+                                                Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
+                                                Log.d("test", "4");
+                                                Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
+                                                intent.putExtra("shelter", shelter);
+                                                Log.d("test", "5");
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    } else {
+                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
+                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Shelter shelter = document.toObject(Shelter.class);
+                                            int index = filtered.indexOf(shelter);
+                                            if (index >= 0) {
+                                                filtered.remove(index);
+                                                listCount--;
+                                            }
+                                        }
+                                        shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
+                                        customListView = (ListView) findViewById(R.id.shelterList);
+                                        customListView.setAdapter(shelterAdapter);
+                                        customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                Log.d("test", "3");
+                                                Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
+                                                Log.d("test", "4");
+                                                Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
+                                                intent.putExtra("shelter", shelter);
+                                                Log.d("test", "5");
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    } else {
+                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
+                    Log.d("test", Integer.toString(listCount));
+                    if(!categories.get(0).isSelected() && !categories.get(1).isSelected()) {
+                        filtered.clear();
+                        mDB.collection("shelters").whereEqualTo("restrictions", "men")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                    listCount++;
+                                                }
+                                            }
+                                            shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
+                                            customListView = (ListView) findViewById(R.id.shelterList);
+                                            customListView.setAdapter(shelterAdapter);
+                                            customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                                @Override
+                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                    Log.d("test", "3");
+                                                    Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
+                                                    Log.d("test", "4");
+                                                    Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
+                                                    intent.putExtra("shelter", shelter);
+                                                    Log.d("test", "5");
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                    listCount++;
+                                                }
+                                            }
+                                            shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
+                                            customListView = (ListView) findViewById(R.id.shelterList);
+                                            customListView.setAdapter(shelterAdapter);
+                                            customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                                @Override
+                                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                    Log.d("test", "3");
+                                                    Shelter shelter = (Shelter) adapterView.getItemAtPosition(i);
+                                                    Log.d("test", "4");
+                                                    Intent intent = new Intent(getApplicationContext(), ShelterDescriptionActivity.class);
+                                                    intent.putExtra("shelter", shelter);
+                                                    Log.d("test", "5");
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        for (int i = 0; i < 2; i++) {
+                            Category a = categories.get(i);
+                            a.setSelected(true);
+                        }
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                    }
+                    for (int i = 2; i < 5; i++) {
+                        Category a = categories.get(i);
+                        a.setSelected(false);
+                    }
+                    sideA = new SidebarAdapter(this, categories);
+                    //Log.d("test", sideA.toString());
+                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                    this.mDrawerList.setAdapter(sideA);
                 }
+            } else {
+                
             }
 
             Toast.makeText(this, "Filter selected", Toast.LENGTH_SHORT).show();
