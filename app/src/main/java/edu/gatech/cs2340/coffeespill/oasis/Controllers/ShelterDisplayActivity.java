@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +15,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +42,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
     private String FIRE_LOG = "Fire_log";
     private List<Shelter> shelters = new ArrayList<>();
     private List<Shelter> filtered = new ArrayList<>();
+    private List<Shelter> searchFilter = new ArrayList<>();
     private ListAdapter shelterAdapter;
     private int listCount = 0;
     Toolbar toolbar;
@@ -64,7 +70,6 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
         this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
         this.mDrawerList.setAdapter(sideA);
         //Log.d("test", mDrawerLayout.toString());
-
 
         setSupportActionBar(toolbar);
 
