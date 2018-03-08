@@ -4,4 +4,5 @@
     <string name="enter_email">enter email</string>
     <string name="login">Login</string>
     <string name="title_activity_shelter_display">ShelterDisplay</string>
+    <string name="filter">Filter</string>
 </resources>
