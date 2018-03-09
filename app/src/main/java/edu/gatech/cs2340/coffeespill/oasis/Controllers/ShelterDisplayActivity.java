@@ -1,5 +1,7 @@
 package edu.gatech.cs2340.coffeespill.oasis.Controllers;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
@@ -42,13 +45,14 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
     private String FIRE_LOG = "Fire_log";
     private List<Shelter> shelters = new ArrayList<>();
     private List<Shelter> filtered = new ArrayList<>();
-    private List<Shelter> searchFilter = new ArrayList<>();
     private ListAdapter shelterAdapter;
     private int listCount = 0;
     Toolbar toolbar;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
-    List<Category> categories = new ArrayList<>();
+    List<Category> categories = new ArrayList<>(Arrays.asList(new Category("Male Only"),
+            new Category("Female Only"), new Category("Families w/ Newborns"), new Category("Children")
+            , new Category("Young Adults"), new Category("Anyone")));
     SidebarAdapter sideA;
 
     @Override
@@ -58,13 +62,6 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
         Model model = Model.getInstance();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        categories = new ArrayList<Category>();
-        categories.add(new Category("Male Only"));
-        categories.add(new Category("Female Only"));
-        categories.add(new Category("Families w/ Newborns"));
-        categories.add(new Category("Children"));
-        categories.add(new Category("Young Adults"));
-        categories.add(new Category("Anyone"));
         sideA = new SidebarAdapter(this, categories);
         //Log.d("test", sideA.toString());
         this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -114,6 +111,7 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.listmenu, menu);
+
         return true;
     }
 
@@ -130,6 +128,8 @@ public class ShelterDisplayActivity extends AppCompatActivity implements android
             //Log.d("test", mDrawerLayout.toString());
             mDrawerLayout.openDrawer(mDrawerList);
             return true;
+        } else if (id == R.id.search) {
+            startActivity(new Intent(getApplicationContext(), SearchActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

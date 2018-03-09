@@ -20,6 +20,7 @@
         <activity android:name=".Controllers.RegisterActivity" />
         <activity android:name=".Controllers.UserInfoActivity" />
         <activity android:name=".Controllers.ShelterDisplayActivity" />
+        <activity android:name=".Controllers.SearchActivity" />
         <activity android:name=".Controllers.ShelterDescriptionActivity"></activity>
     </application>
 

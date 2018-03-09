@@ -6,24 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/searchResult"
-        android:layout_width="match_parent"
-        android:layout_height="200px"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="43dp" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/checkShelter"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text=""
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:layout_marginTop="115dp"
+        android:text="Login Email"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
     <TextView
         android:id="@+id/userEmail"
@@ -31,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView8"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="87dp"
         android:text="email here"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -39,10 +30,9 @@
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/userEmail"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/userEmail"
-        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="71dp"
         android:text="Logout" />
 
     <TextView
@@ -51,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="31dp"
         android:text="User Info"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
@@ -66,28 +56,5 @@
         android:text="check shelters"
         tools:layout_editor_absoluteX="126dp"
         tools:layout_editor_absoluteY="294dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="search" />
-
-        <EditText
-            android:id="@+id/shelterName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="shelter name" />
-
-    </LinearLayout>
 
 </RelativeLayout>
