@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "474578726873-l8d90s8p04n6o0fjtgv9btlgvt60ur2u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.gatech.cs2340.coffeespill.oasis",
+            "certificate_hash": "05c02e6c349381bd24971868bbe0af0ae1095520"
+          }
+        },
+        {
           "client_id": "474578726873-pmtk51r192gbk9qj7hkc362lvmoig8jm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
