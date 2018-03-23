@@ -36,28 +36,7 @@ public class UserInfoActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if(auth.getCurrentUser() != null) {
-            Thread t = new Thread() {
-
-                @Override
-                public void run() {
-                    try {
-                        while (!isInterrupted()) {
-                            Thread.sleep(1000);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (u != null) {
-                                        userEmail.setText(u.get_contact());
-                                    }
-                                }
-                            });
-                        }
-                    } catch (InterruptedException e) {
-                    }
-                }
-            };
-
-            t.start();
+            userEmail.setText(u.get_contact());
         }
 
         logout.setOnClickListener(new View.OnClickListener() {

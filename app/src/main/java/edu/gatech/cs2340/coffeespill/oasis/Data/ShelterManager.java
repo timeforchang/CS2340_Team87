@@ -25,6 +25,7 @@ public class ShelterManager {
 
     public ShelterManager() {
         this.mDB = FirebaseFirestore.getInstance();
+        shelters = getData();
     }
 
     public List<Shelter> getData() {
