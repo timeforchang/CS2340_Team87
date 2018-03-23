@@ -71,8 +71,6 @@ public class SidebarAdapter extends ArrayAdapter<Category> {
             v = inflater.inflate(R.layout.drawer_list_item, null);
             holder.category = (TextView) v.findViewById(R.id.category);
             holder.check = (CheckBox) v.findViewById(R.id.checkbox);
-
-            holder.check.setOnCheckedChangeListener((ShelterDisplayActivity) con);
         } else {
             holder = (filterHolder) v.getTag();
         }

@@ -4,9 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class Shelter implements Parcelable{
+public class Shelter implements Parcelable {
     private int id;
     private String name;
+    private Integer capacity;
+    private String restrictions;
+    private double longitude;
+    private double latitude;
+    private String address;
+    private String notes;
+    private String phone;
 
     public Shelter(int id, String name, Integer capacity, String restrictions, double longitude, double latitude, String address, String notes, String phone) {
         this.id = id;
@@ -20,40 +27,7 @@ public class Shelter implements Parcelable{
         this.phone = phone;
     }
 
-    private Integer capacity;
-    private String restrictions;
-    private double longitude;
-    private double latitude;
-    private String address;
-    private String notes;
-    private String phone;
-
-    protected Shelter(Parcel in) {
-        id = in.readInt();
-        name = in.readString();
-        capacity = in.readInt();
-        restrictions = in.readString();
-        longitude = in.readDouble();
-        latitude = in.readDouble();
-        address = in.readString();
-        notes = in.readString();
-        phone = in.readString();
-    }
-
-    public Shelter() {
-    }
-
-    public static final Creator<Shelter> CREATOR = new Creator<Shelter>() {
-        @Override
-        public Shelter createFromParcel(Parcel in) {
-            return new Shelter(in);
-        }
-
-        @Override
-        public Shelter[] newArray(int size) {
-            return new Shelter[size];
-        }
-    };
+    public Shelter() {}
 
     public int getId() {
         return id;
@@ -123,34 +97,16 @@ public class Shelter implements Parcelable{
         this.phone = phone;
     }
 
-    public Shelter(int _id, String _name, int _capacity, int _longitude, int _latitude, String _address, String _notes, String _phone) {
-        id = _id;
-        name = _name;
-        capacity = _capacity;
-        longitude = _longitude;
-        latitude = _latitude;
-        address = _address;
-        notes = _notes;
-        phone = _phone;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(name);
-        parcel.writeInt(capacity);
-        parcel.writeString(restrictions);
-        parcel.writeDouble(longitude);
-        parcel.writeDouble(latitude);
-        parcel.writeString(address);
-        parcel.writeString(notes);
-        parcel.writeString(phone);
-    }
+//    public Shelter(int _id, String _name, int _capacity, int _longitude, int _latitude, String _address, String _notes, String _phone) {
+//        id = _id;
+//        name = _name;
+//        capacity = _capacity;
+//        longitude = _longitude;
+//        latitude = _latitude;
+//        address = _address;
+//        notes = _notes;
+//        phone = _phone;
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -161,4 +117,61 @@ public class Shelter implements Parcelable{
         }
         return ret;
     }
+
+    @Override
+    public String toString() {
+        return "Shelter{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", capacity=" + capacity +
+                ", restrictions='" + restrictions + '\'' +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", address='" + address + '\'' +
+                ", notes='" + notes + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeValue(this.capacity);
+        dest.writeString(this.restrictions);
+        dest.writeDouble(this.longitude);
+        dest.writeDouble(this.latitude);
+        dest.writeString(this.address);
+        dest.writeString(this.notes);
+        dest.writeString(this.phone);
+    }
+
+    protected Shelter(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.capacity = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.restrictions = in.readString();
+        this.longitude = in.readDouble();
+        this.latitude = in.readDouble();
+        this.address = in.readString();
+        this.notes = in.readString();
+        this.phone = in.readString();
+    }
+
+    public static final Creator<Shelter> CREATOR = new Creator<Shelter>() {
+        @Override
+        public Shelter createFromParcel(Parcel source) {
+            return new Shelter(source);
+        }
+
+        @Override
+        public Shelter[] newArray(int size) {
+            return new Shelter[size];
+        }
+    };
 }

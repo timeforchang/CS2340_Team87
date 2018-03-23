@@ -4,11 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +22,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
 import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
@@ -52,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
         Model model = Model.getInstance();
 
         mDB = FirebaseFirestore.getInstance();
-        shelterAdapter = new CustomShelterAdapter(getApplicationContext(), searched);
+        shelterAdapter = new CustomShelterAdapterListView(getApplicationContext(), searched);
         customListView = (ListView) findViewById(R.id.searchList);
         editSearch = (EditText) findViewById(R.id.searchBar);
         searchBtn = (Button) findViewById(R.id.search_btn);
@@ -70,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
                                 Shelter shelter = document.toObject(Shelter.class);
                                 searched.add(shelter);
                             }
-                            shelterAdapter = new CustomShelterAdapter(getApplicationContext(), searched);
+                            shelterAdapter = new CustomShelterAdapterListView(getApplicationContext(), searched);
                             customListView = (ListView) findViewById(R.id.searchList);
                             customListView.setAdapter(shelterAdapter);
                             customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -103,7 +98,7 @@ public class SearchActivity extends AppCompatActivity {
                                         Shelter shelter = document.toObject(Shelter.class);
                                         filtered.add(shelter);
                                     }
-                                    shelterAdapter = new CustomShelterAdapter(getApplicationContext(), filtered);
+                                    shelterAdapter = new CustomShelterAdapterListView(getApplicationContext(), filtered);
                                     customListView = (ListView) findViewById(R.id.searchList);
                                     customListView.setAdapter(shelterAdapter);
                                     customListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

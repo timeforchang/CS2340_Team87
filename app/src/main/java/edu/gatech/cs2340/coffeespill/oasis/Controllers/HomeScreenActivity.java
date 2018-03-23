@@ -21,7 +21,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(HomeScreenActivity.this, UserInfoActivity.class);
+            Intent intent = new Intent(HomeScreenActivity.this, ShelterListActivity.class);
             startActivity(intent);
             finish();
         }

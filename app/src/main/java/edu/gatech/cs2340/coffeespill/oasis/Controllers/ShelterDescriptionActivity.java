@@ -9,22 +9,30 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
 
 public class ShelterDescriptionActivity extends AppCompatActivity {
 
-    private TextView shelterDetails;
+    private TextView dName, dCap, dAdd, dPhone, dRestr, dNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelter_description);
 
-        Bundle bundle = getIntent().getExtras();
-        Shelter shelter = (bundle != null) ? (Shelter) bundle.getParcelable("shelter") : null;
-        String detail = "Id: " + shelter.getId() + "\nName: " + shelter.getName() + "\nCapacity: "
-                + shelter.getCapacity() + "\nGender: " + shelter.getRestrictions()
-                + "\nLongitude " + shelter.getLongitude() + "\nLatitude: "
-                + shelter.getLongitude() + "\nAddress: "
-                + shelter.getAddress() + "\nSpecial Notes: " + shelter.getNotes()
-                + "\n Phone Number: " + shelter.getPhone();
-        shelterDetails = (TextView) findViewById(R.id.shelterDetails);
-        shelterDetails.setText(detail);
+        Shelter shelter = getIntent().getExtras().getParcelable(CustomShelterAdapter.SHELTER_KEY);
+        if (shelter == null) {
+            throw new AssertionError("Null data received");
+        }
+
+        dName = (TextView) findViewById(R.id.descName);
+        dCap = (TextView) findViewById(R.id.descCap);
+        dAdd = (TextView) findViewById(R.id.descAddress);
+        dPhone = (TextView) findViewById(R.id.descPhone);
+        dRestr = (TextView) findViewById(R.id.descRestr);
+        dNotes = (TextView) findViewById(R.id.descNotes);
+
+        dName.setText(shelter.getName());
+        dCap.setText("Space Remaining: " + Integer.toString(shelter.getCapacity()));
+        dAdd.setText(shelter.getAddress());
+        dPhone.setText(shelter.getPhone());
+        dRestr.setText("Restrictions: " + shelter.getRestrictions());
+        dNotes.setText("Notes: " + shelter.getNotes());
     }
 }

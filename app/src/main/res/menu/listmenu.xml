@@ -8,5 +8,8 @@
     <item android:id="@+id/filter"
         android:title="@string/filter"
         app:showAsAction="never"/>
+    <item android:id="@+id/profile"
+        android:title="Profile"
+        app:showAsAction="never"/>
 
 </menu>

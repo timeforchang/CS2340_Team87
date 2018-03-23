@@ -79,13 +79,13 @@ public class RegisterActivity extends AppCompatActivity {
                     snack.show();
                 } else {
                     System.out.println("sign up successful");
-
                     Map<String, Object> newUser = new HashMap<>();
-                    newUser.put("id", auth.getUid());
-                    newUser.put("name", registerName.getText().toString());
-                    newUser.put("user type", (String) typeSpinner.getSelectedItem());
-                    newUser.put("email", email);
-                    newUser.put("password", pass);
+                    newUser.put("_id", auth.getCurrentUser().getUid());
+                    newUser.put("_username", registerName.getText().toString());
+                    newUser.put("_type", (String) typeSpinner.getSelectedItem());
+                    newUser.put("_locked", false);
+                    newUser.put("_contact", email);
+                    newUser.put("_pWord", pass);
 
                     db.collection("users").add(newUser);
 

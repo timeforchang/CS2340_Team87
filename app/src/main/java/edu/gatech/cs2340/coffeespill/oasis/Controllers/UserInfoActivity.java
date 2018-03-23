@@ -8,7 +8,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
+import edu.gatech.cs2340.coffeespill.oasis.Model.User;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -17,22 +20,44 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
 
 public class UserInfoActivity extends AppCompatActivity {
     private Button logout;
-    private Button checkShelter;
     private TextView userEmail;
     private FirebaseAuth auth;
+    Model model = Model.getInstance();
+    private User u;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         logout = (Button) findViewById(R.id.logout);
-        checkShelter = (Button) findViewById(R.id.checkShelter);
-        userEmail = (TextView) findViewById(R.id.userEmail);
+        u = model.getUser();
 
+        userEmail = (TextView) findViewById(R.id.userEmail);
         auth = FirebaseAuth.getInstance();
 
         if(auth.getCurrentUser() != null) {
-            userEmail.setText(auth.getCurrentUser().getEmail());
+            Thread t = new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        while (!isInterrupted()) {
+                            Thread.sleep(1000);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (u != null) {
+                                        userEmail.setText(u.get_contact());
+                                    }
+                                }
+                            });
+                        }
+                    } catch (InterruptedException e) {
+                    }
+                }
+            };
+
+            t.start();
         }
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -41,22 +66,12 @@ public class UserInfoActivity extends AppCompatActivity {
                 userLogout();
             }
         });
-
-
-        checkShelter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), ShelterDisplayActivity.class));
-            }
-        });
     }
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        startActivity(new Intent(UserInfoActivity.this, ShelterListActivity.class));
+        finish();
     }
 
     private void userLogout() {

@@ -1,38 +1,81 @@
 package edu.gatech.cs2340.coffeespill.oasis.Controllers;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
+/**
+ * Created by andrew_chang on 2018-03-22.
+ */
 
-public class CustomShelterAdapter extends ArrayAdapter<Shelter> {
+public class CustomShelterAdapter extends RecyclerView.Adapter<CustomShelterAdapter.ViewHolder> {
+    public static final String SHELTER_KEY = "item_key";
+    private List<Shelter> mShelters;
+    private Context mContext;
 
-    public CustomShelterAdapter(@NonNull Context context, List<Shelter> shelters) {
-        super(context, R.layout.custom_shelter_row, shelters);
+    public CustomShelterAdapter(Context context, List<Shelter> s) {
+        this.mShelters = s;
+        this.mContext = context;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View customView = inflater.inflate(R.layout.custom_shelter_row, parent, false);
-        String shelterName = getItem(position).getName();
+    public CustomShelterAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View shelterView = inflater.inflate(R.layout.custom_shelter_row, parent, false);
+        ViewHolder vh = new ViewHolder(shelterView);
+        return vh;
+    }
 
-        TextView itemName = (TextView) customView.findViewById(R.id.shelterName);
-        itemName.setText(shelterName);
+    @Override
+    public void onBindViewHolder(CustomShelterAdapter.ViewHolder holder, int position) {
+        final Shelter shelter = mShelters.get(position);
 
-        Log.d("test", "00000");
-        return customView;
+        if (shelter != null) {
+            holder.sName.setText(shelter.getName());
+            holder.sCapacity.setText(Integer.toString(shelter.getCapacity()));
+            holder.sAddress.setText(shelter.getAddress());
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ShelterDescriptionActivity.class);
+                    intent.putExtra(SHELTER_KEY, shelter);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mShelters.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView sName;
+        public TextView sCapacity;
+        public TextView sAddress;
+        public View mView;
+
+        public ViewHolder(View shelterView) {
+            super(shelterView);
+
+            sName = (TextView) shelterView.findViewById(R.id.shelterName);
+            sCapacity = (TextView) shelterView.findViewById(R.id.shelterCapacity);
+            sAddress = (TextView) shelterView.findViewById(R.id.shelterAddress);
+            mView = shelterView;
+        }
     }
 }

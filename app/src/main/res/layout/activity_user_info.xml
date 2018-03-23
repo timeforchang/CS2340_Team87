@@ -45,16 +45,4 @@
         android:text="User Info"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-    <Button
-        android:id="@+id/checkShelter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/logout"
-        android:layout_alignEnd="@+id/textView8"
-        android:layout_alignRight="@+id/textView8"
-        android:layout_marginBottom="29dp"
-        android:text="check shelters"
-        tools:layout_editor_absoluteX="126dp"
-        tools:layout_editor_absoluteY="294dp" />
-
 </RelativeLayout>
