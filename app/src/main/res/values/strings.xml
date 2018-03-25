@@ -5,4 +5,13 @@
     <string name="login">Login</string>
     <string name="title_activity_shelter_display">ShelterDisplay</string>
     <string name="filter">Filter</string>
+    <string-array
+        name="filters">
+        <item>Men</item>
+        <item>Women</item>
+        <item>Families with newborns</item>
+        <item>Children</item>
+        <item>Young Adults</item>
+        <item>Anyone</item>
+    </string-array>
 </resources>

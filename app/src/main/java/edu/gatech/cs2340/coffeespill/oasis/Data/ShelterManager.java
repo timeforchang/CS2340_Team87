@@ -25,11 +25,10 @@ public class ShelterManager {
 
     public ShelterManager() {
         this.mDB = FirebaseFirestore.getInstance();
-        shelters = getData();
+        shelters = getAll();
     }
 
-    public List<Shelter> getData() {
-
+    public List<Shelter> getAll() {
         mDB.collection("shelters").orderBy("id")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -54,5 +53,4 @@ public class ShelterManager {
                 });
         return shelters;
     }
-
 }

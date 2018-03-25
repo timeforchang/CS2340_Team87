@@ -25,14 +25,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controllers.ShelterListActivity" />
         </activity>
-        <activity android:name=".Controllers.SearchActivity"
-            android:parentActivityName=".Controllers.ShelterListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Controllers.ShelterListActivity" />
-        </activity>
         <activity android:name=".Controllers.ShelterListActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:launchMode="singleTop"/>
         <activity android:name=".Controllers.ShelterDescriptionActivity"
             android:parentActivityName=".Controllers.ShelterListActivity">
             <meta-data

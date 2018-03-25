@@ -3,8 +3,10 @@
 
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/search"
-        android:title="Search Name"
-        app:showAsAction="never" />
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.SearchView" />
     <item android:id="@+id/filter"
         android:title="@string/filter"
         app:showAsAction="never"/>

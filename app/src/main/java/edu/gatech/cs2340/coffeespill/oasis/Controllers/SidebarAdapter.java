@@ -71,13 +71,24 @@ public class SidebarAdapter extends ArrayAdapter<Category> {
             v = inflater.inflate(R.layout.drawer_list_item, null);
             holder.category = (TextView) v.findViewById(R.id.category);
             holder.check = (CheckBox) v.findViewById(R.id.checkbox);
+
+            holder.check.setOnCheckedChangeListener((ShelterListActivity) con);
+            v.setTag(holder);
         } else {
             holder = (filterHolder) v.getTag();
         }
-        Category c = list.get(position);
+        final Category c = list.get(position);
         holder.category.setText(c.getName());
         holder.check.setChecked(c.isSelected());
         holder.check.setTag(c);
+
+        final filterHolder finalHolder = holder;
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finalHolder.check.setChecked(!c.isSelected());
+            }
+        });
 
         return v;
     }

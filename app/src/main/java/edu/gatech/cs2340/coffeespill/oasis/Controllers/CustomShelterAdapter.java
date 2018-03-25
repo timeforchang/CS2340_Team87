@@ -7,10 +7,14 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
@@ -24,9 +28,11 @@ public class CustomShelterAdapter extends RecyclerView.Adapter<CustomShelterAdap
     public static final String SHELTER_KEY = "item_key";
     private List<Shelter> mShelters;
     private Context mContext;
+    private List<Shelter> filteredData = new ArrayList<>();
 
     public CustomShelterAdapter(Context context, List<Shelter> s) {
         this.mShelters = s;
+        this.filteredData = s;
         this.mContext = context;
     }
 

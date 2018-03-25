@@ -29,7 +29,7 @@ public class Model {
     }
 
     public List<Shelter> getShelters() {
-        shelters = sm.getData();
+        shelters = sm.getAll();
         return shelters;
     }
 
