@@ -123,33 +123,23 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onQueryTextSubmit(String string) {
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextChange(String string) {
                 f.clear();
-                mDB.collection("shelters").orderBy("name").startAt(s).endAt(s + "\uf8ff")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (DocumentSnapshot document : task.getResult()) {
-                                        Shelter shelter = document.toObject(Shelter.class);
-                                        if (!f.contains(shelter)) {
-                                            f.add(shelter);
-                                        }
-                                    }
-                                    adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                    RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                    recView.setAdapter(adapter);
-                                } else {
-                                    Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                }
-                            }
-                        });
+                for (Shelter shelter : s) {
+                    if (shelter.getName().contains(string)) {
+                        if (!f.contains(shelter)) {
+                            f.add(shelter);
+                        }
+                    }
+                }
+                adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+                recView.setAdapter(adapter);
                 return true;
             }
         });
