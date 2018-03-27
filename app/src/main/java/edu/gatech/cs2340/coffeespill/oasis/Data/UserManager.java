@@ -60,7 +60,7 @@ public class UserManager {
         return curUser;
     }
 
-    public void check(final Shelter s) {
+    public void check(final Shelter s, final int checkNum) {
         mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -74,13 +74,13 @@ public class UserManager {
                                 } else {
                                     Map<String, Object> data = new HashMap<>();
                                     data.put("_checked", true);
-                                    data.put("_checkedNum", 1);
+                                    data.put("_checkedNum", checkNum);
                                     data.put("_checkedSID", s.getId());
                                     mDB.collection("users").document(dUser.get_id())
                                             .set(data, SetOptions.merge());
                                     dUser.set_checkedSID(s.getId());
                                     dUser.set_checked(true);
-                                    dUser.set_checkedNum(1);
+                                    dUser.set_checkedNum(checkNum);
                                 }
                             }
                         }

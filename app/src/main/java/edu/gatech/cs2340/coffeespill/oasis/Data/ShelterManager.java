@@ -58,7 +58,7 @@ public class ShelterManager {
         return shelters;
     }
 
-    public void check(final Shelter s) {
+    public void check(final Shelter s, final int checkNum) {
         mDB.collection("shelters").whereEqualTo("id", s.getId())
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -70,7 +70,7 @@ public class ShelterManager {
                                if (dShelter == null) {
                                    System.out.println("found shelter is null");
                                } else {
-                                   int newCap = dShelter.getCapacity() - 1;
+                                   int newCap = dShelter.getCapacity() - checkNum;
                                    Map<String, Object> data = new HashMap<>();
                                    data.put("capacity", newCap);
                                    mDB.collection("shelters").document(Integer.toString(dShelter.getId()))

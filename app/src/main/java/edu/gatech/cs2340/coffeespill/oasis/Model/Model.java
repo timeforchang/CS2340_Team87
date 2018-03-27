@@ -38,9 +38,9 @@ public class Model {
         return user;
     }
 
-    public void checkin(Shelter s) {
-        sm.check(s);
-        um.check(s);
+    public void checkin(Shelter s, int checkNum) {
+        sm.check(s, checkNum);
+        um.check(s, checkNum);
     }
 
     public void checkout(Shelter s) {
