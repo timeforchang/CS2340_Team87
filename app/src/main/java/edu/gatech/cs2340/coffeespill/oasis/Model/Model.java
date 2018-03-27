@@ -43,9 +43,9 @@ public class Model {
         um.check(s, checkNum);
     }
 
-    public void checkout(Shelter s) {
-        sm.out(s);
-        um.out(s);
+    public void checkout(Shelter s, int checkNum) {
+        sm.out(s, checkNum);
+        um.out(s, checkNum);
     }
 
     public void refresh() {

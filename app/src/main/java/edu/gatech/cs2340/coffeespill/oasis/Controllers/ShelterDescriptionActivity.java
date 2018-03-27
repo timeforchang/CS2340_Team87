@@ -68,7 +68,7 @@ public class ShelterDescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 System.out.println("pre: " + shelter.getCapacity());
-                model.checkout(shelter);
+                model.checkout(shelter, curUser.get_checkedNum());
                 dCap.setText("Space Remaining: " + Integer.toString(shelter.getCapacity() + curUser.get_checkedNum()));
 
                 checkIn.setEnabled(true);
@@ -86,6 +86,8 @@ public class ShelterDescriptionActivity extends AppCompatActivity {
             public void onClick(View view) {
                 System.out.println("pre: " + shelter.getCapacity());
                 model.checkin(shelter, np.getValue());
+                curUser = model.getUser();
+                //model.refresh();
                 dCap.setText("Space Remaining: " + Integer.toString(shelter.getCapacity() - np.getValue()));
 
                 checkIn.setEnabled(false);

@@ -78,9 +78,10 @@ public class UserManager {
                                     data.put("_checkedSID", s.getId());
                                     mDB.collection("users").document(dUser.get_id())
                                             .set(data, SetOptions.merge());
-                                    dUser.set_checkedSID(s.getId());
-                                    dUser.set_checked(true);
-                                    dUser.set_checkedNum(checkNum);
+                                    curUser.set_checkedSID(s.getId());
+                                    curUser.set_checked(true);
+                                    curUser.set_checkedNum(checkNum);
+                                    System.out.println(curUser);
                                 }
                             }
                         }
@@ -88,7 +89,7 @@ public class UserManager {
                 });
     }
 
-    public void out(final Shelter s) {
+    public void out(final Shelter s, final int checkNum) {
         mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -106,9 +107,9 @@ public class UserManager {
                                     data.put("_checkedSID", -1);
                                     mDB.collection("users").document(dUser.get_id())
                                             .set(data, SetOptions.merge());
-                                    dUser.set_checkedSID(-1);
-                                    dUser.set_checked(false);
-                                    dUser.set_checkedNum(0);
+                                    curUser.set_checkedSID(-1);
+                                    curUser.set_checked(false);
+                                    curUser.set_checkedNum(0);
                                 }
                             }
                         }
