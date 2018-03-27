@@ -35,8 +35,8 @@ public class UserInfoActivity extends AppCompatActivity {
         userEmail = (TextView) findViewById(R.id.userEmail);
         auth = FirebaseAuth.getInstance();
 
-        if(auth.getCurrentUser() != null) {
-            userEmail.setText(u.get_contact());
+        if (auth.getCurrentUser() != null) {
+            //userEmail.setText(u.get_contact());
         }
 
         logout.setOnClickListener(new View.OnClickListener() {

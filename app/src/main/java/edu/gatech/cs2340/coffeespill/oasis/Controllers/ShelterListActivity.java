@@ -57,6 +57,7 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
             new Category("Female Only"), new Category("Families w/ Newborns"), new Category("Children")
             , new Category("Young Adults"), new Category("Anyone")));
     SidebarAdapter sideA;
+    private Bundle savedInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,21 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
         };
 
         timerHandler.postDelayed(timerRunnable, 2000); //Start timer after 2 secs
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        model.refresh();
+        s = model.getShelters();
+        System.out.println("called");
+        for (Shelter shelter : s) {
+            System.out.print("name: " + shelter.getName() + " | ");
+            System.out.println("cap: " + shelter.getCapacity());
+        }
+        adapter = new CustomShelterAdapter(this, s);
+        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+        recView.setAdapter(adapter);
     }
 
     @Override
@@ -167,6 +183,12 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
             //Log.d("test", mDrawerLayout.toString());
             mDrawerLayout.openDrawer(mDrawerList);
             return true;
+        } else if (id == R.id.refresh) {
+            model.refresh();
+            s = model.getShelters();
+            adapter = new CustomShelterAdapter(this, s);
+            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+            recView.setAdapter(adapter);
         }
 
         return super.onOptionsItemSelected(item);

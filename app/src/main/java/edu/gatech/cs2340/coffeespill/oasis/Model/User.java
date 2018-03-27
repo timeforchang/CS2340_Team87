@@ -17,6 +17,33 @@ public class User implements Parcelable {
     private boolean _locked;
     private String _contact;
     private String _type;
+    private boolean _checked;
+    private int _checkedNum;
+    private int _checkedSID;
+
+    public boolean is_checked() {
+        return _checked;
+    }
+
+    public void set_checked(boolean _checked) {
+        this._checked = _checked;
+    }
+
+    public int get_checkedNum() {
+        return _checkedNum;
+    }
+
+    public void set_checkedNum(int _checkedNum) {
+        this._checkedNum = _checkedNum;
+    }
+
+    public int get_checkedSID() {
+        return _checkedSID;
+    }
+
+    public void set_checkedSID(int _checkedSID) {
+        this._checkedSID = _checkedSID;
+    }
 
     public String get_id() {
         return _id;
@@ -68,12 +95,16 @@ public class User implements Parcelable {
 
     public static List<String> userTypes = Arrays.asList("User", "Employee", "Admin");
 
-    public User(String uName, String pWord, String cont, boolean locked, String type) {
-        _username = uName;
-        _pWord = pWord;
-        _contact = cont;
-        _locked = locked;
-        _type = type;
+    public User(String _id, String _username, String _pWord, boolean _locked, String _contact, String _type, boolean _checked, int _checkedNum, int _checkedSID) {
+        this._id = _id;
+        this._username = _username;
+        this._pWord = _pWord;
+        this._locked = _locked;
+        this._contact = _contact;
+        this._type = _type;
+        this._checked = _checked;
+        this._checkedNum = _checkedNum;
+        this._checkedSID = _checkedSID;
     }
 
     public User() {}
@@ -81,12 +112,15 @@ public class User implements Parcelable {
     @Override
     public String toString() {
         return "User{" +
-                "_id=" + _id +
+                "_id='" + _id + '\'' +
                 ", _username='" + _username + '\'' +
                 ", _pWord='" + _pWord + '\'' +
                 ", _locked=" + _locked +
                 ", _contact='" + _contact + '\'' +
                 ", _type='" + _type + '\'' +
+                ", _checked=" + _checked +
+                ", _checkedNum=" + _checkedNum +
+                ", _checkedSID=" + _checkedSID +
                 '}';
     }
 
@@ -99,6 +133,7 @@ public class User implements Parcelable {
         }
         return ret;
     }
+
 
     @Override
     public int describeContents() {
@@ -113,6 +148,9 @@ public class User implements Parcelable {
         dest.writeByte(this._locked ? (byte) 1 : (byte) 0);
         dest.writeString(this._contact);
         dest.writeString(this._type);
+        dest.writeByte(this._checked ? (byte) 1 : (byte) 0);
+        dest.writeInt(this._checkedNum);
+        dest.writeInt(this._checkedSID);
     }
 
     protected User(Parcel in) {
@@ -122,9 +160,12 @@ public class User implements Parcelable {
         this._locked = in.readByte() != 0;
         this._contact = in.readString();
         this._type = in.readString();
+        this._checked = in.readByte() != 0;
+        this._checkedNum = in.readInt();
+        this._checkedSID = in.readInt();
     }
 
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+    public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel source) {
             return new User(source);

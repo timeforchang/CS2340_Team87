@@ -86,8 +86,11 @@ public class RegisterActivity extends AppCompatActivity {
                     newUser.put("_locked", false);
                     newUser.put("_contact", email);
                     newUser.put("_pWord", pass);
+                    newUser.put("_checked", false);
+                    newUser.put("_checkedNum", 0);
+                    newUser.put("_checkedSID", -1);
 
-                    db.collection("users").add(newUser);
+                    db.collection("users").document(auth.getCurrentUser().getUid()).set(newUser);
 
                     Toast.makeText(RegisterActivity.this, "Register Successful!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));

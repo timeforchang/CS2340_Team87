@@ -37,4 +37,19 @@ public class Model {
         user = um.getData();
         return user;
     }
+
+    public void checkin(Shelter s) {
+        sm.check(s);
+        um.check(s);
+    }
+
+    public void checkout(Shelter s) {
+        sm.out(s);
+        um.out(s);
+    }
+
+    public void refresh() {
+        sm.refresh();
+        um.refresh();
+    }
 }

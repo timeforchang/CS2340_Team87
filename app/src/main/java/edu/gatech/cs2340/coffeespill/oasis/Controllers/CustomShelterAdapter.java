@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
 import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
+import edu.gatech.cs2340.coffeespill.oasis.Model.User;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
