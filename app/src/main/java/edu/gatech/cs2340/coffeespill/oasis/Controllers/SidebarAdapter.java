@@ -2,18 +2,16 @@ package edu.gatech.cs2340.coffeespill.oasis.Controllers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -72,7 +70,7 @@ public class SidebarAdapter extends ArrayAdapter<Category> {
             holder.category = (TextView) v.findViewById(R.id.category);
             holder.check = (CheckBox) v.findViewById(R.id.checkbox);
 
-            holder.check.setOnCheckedChangeListener((ShelterListActivity) con);
+            holder.check.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) con);
             v.setTag(holder);
         } else {
             holder = (filterHolder) v.getTag();

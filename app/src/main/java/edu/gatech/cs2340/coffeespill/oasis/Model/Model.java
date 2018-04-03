@@ -11,21 +11,21 @@ import edu.gatech.cs2340.coffeespill.oasis.Data.UserManager;
 
 public class Model {
     private static Model _instance;
-    public static synchronized Model getInstance() {
-        if (_instance == null) {
-            _instance = new Model();
-        }
-        return _instance;
-    }
     private ShelterManager sm;
     private UserManager um;
-
     private User user;
     private List<Shelter> shelters;
 
     private Model() {
         sm = new ShelterManager();
         um = new UserManager();
+    }
+
+    public static synchronized Model getInstance() {
+        if (_instance == null) {
+            _instance = new Model();
+        }
+        return _instance;
     }
 
     public List<Shelter> getShelters() {

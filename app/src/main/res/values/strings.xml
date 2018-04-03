@@ -5,8 +5,7 @@
     <string name="login">Login</string>
     <string name="title_activity_shelter_display">ShelterDisplay</string>
     <string name="filter">Filter</string>
-    <string-array
-        name="filters">
+    <string-array name="filters">
         <item>Men</item>
         <item>Women</item>
         <item>Families with newborns</item>
@@ -14,4 +13,7 @@
         <item>Young Adults</item>
         <item>Anyone</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
+    <string name="shelter_list">Shelter List</string>
+    <string name="shelters_map">Shelters Map</string>
 </resources>
