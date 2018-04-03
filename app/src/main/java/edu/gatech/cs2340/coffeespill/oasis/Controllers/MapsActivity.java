@@ -98,9 +98,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.addMarker(new MarkerOptions()
                     .position(temp)
                     .title(shelter.getName()))
-                    .setSnippet("Tel: " + shelter.getPhone());
+                    .setSnippet("Address: " + shelter.getAddress());
             mMap.moveCamera(CameraUpdateFactory.newLatLng(temp));
-
+            mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(33.7490, -84.3830) , 12.0f) );
         }
 
     }
@@ -118,10 +118,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.profile) {
-            startActivity(new Intent(getApplicationContext(), UserInfoActivity.class));
-            return true;
-        } else if (id == R.id.filter) {
+        if (id == R.id.filter) {
             mDrawerLayout.openDrawer(mDrawerList);
             return true;
         }
@@ -290,6 +287,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     }
                                 }
                             });
+                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Shelter shelter = document.toObject(Shelter.class);
+                                            if (!filtered.contains(shelter)) {
+                                                filtered.add(shelter);
+                                            }
+                                        }
+                                        reDisplayMarkers(filtered);
+                                    } else {
+                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
                     categories.get(5).setSelected(false);
                     sideA = new SidebarAdapter(this, categories);
                     //Log.d("test", sideA.toString());
@@ -347,6 +362,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 }
                             });
                     mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Shelter shelter = document.toObject(Shelter.class);
+                                            if (!filtered.contains(shelter)) {
+                                                filtered.add(shelter);
+                                            }
+                                        }
+                                        reDisplayMarkers(filtered);
+                                    } else {
+                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
+                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
@@ -627,6 +660,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     }
                                 }
                             });
+                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Shelter shelter = document.toObject(Shelter.class);
+                                            int index = filtered.indexOf(shelter);
+                                            if (index >= 0) {
+                                                filtered.remove(index);
+                                            }
+                                        }
+                                        if (filtered.size() == 0) {
+                                            reDisplayMarkers(shelters);
+                                        } else {
+                                            reDisplayMarkers(filtered);
+                                        }
+                                    } else {
+                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
                 } else {
                     mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
                             .get()
@@ -698,6 +754,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 }
                             });
                     mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (DocumentSnapshot document : task.getResult()) {
+                                            Shelter shelter = document.toObject(Shelter.class);
+                                            int index = filtered.indexOf(shelter);
+                                            if (index >= 0) {
+                                                filtered.remove(index);
+                                            }
+                                        }
+                                        if (filtered.size() == 0) {
+                                            reDisplayMarkers(shelters);
+                                        } else {
+                                            reDisplayMarkers(filtered);
+                                        }
+                                    } else {
+                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                    }
+                                }
+                            });
+                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
                             .get()
                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override

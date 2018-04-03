@@ -7,6 +7,9 @@
         android:icon="@drawable/ic_search"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
+    <item android:id="@+id/maps"
+        android:title="@string/title_activity_maps"
+        app:showAsAction="always"/>
     <item android:id="@+id/filter"
         android:title="@string/filter"
         app:showAsAction="never"/>

@@ -31,7 +31,7 @@
             android:name=".Controllers.MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:parentActivityName=".Controllers.UserInfoActivity">
+            android:parentActivityName=".Controllers.ShelterListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Controllers.UserInfoActivity" />
@@ -41,7 +41,11 @@
         <activity android:name=".Controllers.RegisterActivity" />
         <activity
             android:name=".Controllers.UserInfoActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:parentActivityName=".Controllers.ShelterListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Controllers.ShelterListActivity" />
+        </activity>
 
         <activity
             android:name=".Controllers.ShelterListActivity"
@@ -50,7 +54,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Controllers.UserInfoActivity" />
+                android:value=".Controllers.ShelterListActivity" />
         </activity>
 
         <activity

@@ -197,6 +197,9 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
             adapter = new CustomShelterAdapter(this, s);
             RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
             recView.setAdapter(adapter);
+        } else if (id == R.id.maps) {
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -938,7 +941,6 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            s = model.getShelters();
                             adapter = new CustomShelterAdapter(getApplicationContext(), s);
                             RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
                             recView.setAdapter(adapter);
@@ -947,5 +949,5 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                         }
                     }
                 });
-        }
+    }
 }
