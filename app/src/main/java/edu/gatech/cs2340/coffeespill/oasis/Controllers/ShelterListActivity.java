@@ -85,9 +85,11 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
 
         Toast.makeText(this, "Got database", Toast.LENGTH_SHORT).show();
 
-        adapter = new CustomShelterAdapter(this, s);
-        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-        recView.setAdapter(adapter);
+        if (!s.isEmpty()) {
+            adapter = new CustomShelterAdapter(this, s);
+            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+            recView.setAdapter(adapter);
+        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         sideA = new SidebarAdapter(this, categories);

@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;
     private EditText loginEmail, loginPass;
     private FirebaseAuth auth;
+    Model model = Model.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                     Snackbar snack = Snackbar.make(findViewById(R.id.loginScreen), "login unsuccessful", Snackbar.LENGTH_LONG);
                     snack.show();
                 } else {
+                    model.refresh();
                     startActivity(new Intent(LoginActivity.this, UserInfoActivity.class));
                     finish();
                 }
