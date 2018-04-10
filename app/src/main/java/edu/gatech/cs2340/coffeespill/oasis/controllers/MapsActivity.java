@@ -32,6 +32,7 @@ import edu.gatech.cs2340.coffeespill.oasis.model.Model;
 import edu.gatech.cs2340.coffeespill.oasis.model.Shelter;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
+@SuppressWarnings("ALL")
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, android.widget.CompoundButton.OnCheckedChangeListener {
 
     DrawerLayout mDrawerLayout;
@@ -127,7 +128,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         int pos = mDrawerList.getPositionForView(compoundButton);
-        if (pos != ListView.INVALID_POSITION || pos > 0) {
+        if (pos != ListView.INVALID_POSITION) {
             Category c = categories.get(pos);
             c.setSelected(b);
             if (b) {
@@ -147,6 +148,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                             }
                                             reDisplayMarkers(filtered);
                                         } else {
+                                            //noinspection ConstantConditions
                                             Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
                                     }
@@ -156,6 +158,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @SuppressWarnings("ConstantConditions")
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {

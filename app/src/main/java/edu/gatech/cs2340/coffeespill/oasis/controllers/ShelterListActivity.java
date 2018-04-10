@@ -40,6 +40,7 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
  * Created by andrew_chang on 2018-03-22.
  */
 
+@SuppressWarnings("ALL")
 public class ShelterListActivity extends AppCompatActivity implements android.widget.CompoundButton.OnCheckedChangeListener {
     //private TextView tvOut;
     Model model = Model.getInstance();
@@ -56,7 +57,6 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
             new Category("Female Only"), new Category("Families w/ Newborns"), new Category("Children")
             , new Category("Young Adults"), new Category("Anyone")));
     SidebarAdapter sideA;
-    private Bundle savedInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +219,7 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         int pos = mDrawerList.getPositionForView(compoundButton);
-        if (pos != ListView.INVALID_POSITION || pos > 0) {
+        if (pos != ListView.INVALID_POSITION) {
             Category c = categories.get(pos);
             c.setSelected(b);
             if (b) {
@@ -946,8 +946,6 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                         break;
                 }
             }
-
-            Toast.makeText(this, "Filter selected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -966,5 +964,6 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                         }
                     }
                 });
+        Toast.makeText(this, "If shelters do not show up, try refreshing", Toast.LENGTH_SHORT).show();
     }
 }

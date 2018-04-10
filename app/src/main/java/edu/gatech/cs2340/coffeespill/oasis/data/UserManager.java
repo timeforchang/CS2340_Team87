@@ -21,6 +21,7 @@ import edu.gatech.cs2340.coffeespill.oasis.model.User;
  * Created by andrew_chang on 2018-03-23.
  */
 
+@SuppressWarnings("ALL")
 public class UserManager {
     private FirebaseFirestore mDB;
     private FirebaseAuth auth;
@@ -33,6 +34,7 @@ public class UserManager {
         curUser = getData();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public User getData() {
         System.out.println(auth.getCurrentUser().getEmail());
         mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
@@ -59,6 +61,7 @@ public class UserManager {
         return curUser;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public void check(final Shelter s, final int checkNum) {
         mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
                 .get()
@@ -88,6 +91,7 @@ public class UserManager {
                 });
     }
 
+    @SuppressWarnings("unused")
     public void out(final Shelter s, final int checkNum) {
         mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
                 .get()

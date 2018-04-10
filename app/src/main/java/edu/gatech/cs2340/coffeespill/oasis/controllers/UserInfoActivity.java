@@ -19,6 +19,7 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
 
 public class UserInfoActivity extends AppCompatActivity {
     private FirebaseAuth auth;
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     Model model = Model.getInstance();
 
     @Override

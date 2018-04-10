@@ -49,30 +49,37 @@ public class User implements Parcelable {
         return _id;
     }
 
+    @SuppressWarnings("unused")
     public void set_id(String _id) {
         this._id = _id;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String get_username() {
         return _username;
     }
 
+    @SuppressWarnings("unused")
     public void set_username(String _username) {
         this._username = _username;
     }
 
+    @SuppressWarnings("unused")
     public String get_pWord() {
         return _pWord;
     }
 
+    @SuppressWarnings("unused")
     public void set_pWord(String _pWord) {
         this._pWord = _pWord;
     }
 
+    @SuppressWarnings("unused")
     public boolean is_locked() {
         return _locked;
     }
 
+    @SuppressWarnings("unused")
     public void set_locked(boolean _locked) {
         this._locked = _locked;
     }
@@ -81,20 +88,24 @@ public class User implements Parcelable {
         return _contact;
     }
 
+    @SuppressWarnings("unused")
     public void set_contact(String _contact) {
         this._contact = _contact;
     }
 
+    @SuppressWarnings("unused")
     public String get_Type() {
         return _type;
     }
 
+    @SuppressWarnings("unused")
     public void set_Type(String type) {
         this._type = type;
     }
 
-    public static List<String> userTypes = Arrays.asList("User", "Employee", "Admin");
+    final public static List<String> userTypes = Arrays.asList("User", "Employee", "Admin");
 
+    @SuppressWarnings("unused")
     public User(String _id, String _username, String _pWord, boolean _locked, String _contact, String _type, boolean _checked, int _checkedNum, int _checkedSID) {
         this._id = _id;
         this._username = _username;
@@ -107,6 +118,7 @@ public class User implements Parcelable {
         this._checkedSID = _checkedSID;
     }
 
+    @SuppressWarnings("unused")
     public User() {}
 
     @Override
@@ -129,7 +141,7 @@ public class User implements Parcelable {
         boolean ret = false;
         if (o instanceof User) {
             User ptr = (User) o;
-            ret = ptr.get_username() == this._username;
+            ret = ptr.get_username().equals(this._username);
         }
         return ret;
     }

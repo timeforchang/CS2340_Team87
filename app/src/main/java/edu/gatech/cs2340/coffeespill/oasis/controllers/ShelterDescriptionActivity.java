@@ -13,6 +13,7 @@ import edu.gatech.cs2340.coffeespill.oasis.model.Shelter;
 import edu.gatech.cs2340.coffeespill.oasis.model.User;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
+@SuppressWarnings("ALL")
 public class ShelterDescriptionActivity extends AppCompatActivity {
 
     private TextView dCap;

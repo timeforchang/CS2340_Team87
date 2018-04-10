@@ -19,8 +19,8 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
  */
 
 class Category {
-    String name;
-    boolean selected = false;
+    private String name;
+    private boolean selected = false;
 
     public Category(String name) {
         super();
@@ -31,6 +31,7 @@ class Category {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
     }
@@ -44,8 +45,10 @@ class Category {
     }
 }
 
-public class SidebarAdapter extends ArrayAdapter<Category> {
+class SidebarAdapter extends ArrayAdapter<Category> {
+    @SuppressWarnings("CanBeFinal")
     private Context con;
+    @SuppressWarnings("CanBeFinal")
     private List<Category> list;
 
     public SidebarAdapter(@NonNull Context context, List<Category> filters) {
@@ -55,17 +58,19 @@ public class SidebarAdapter extends ArrayAdapter<Category> {
     }
 
     private static class filterHolder {
-        public TextView category;
-        public CheckBox check;
+        TextView category;
+        CheckBox check;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         filterHolder holder = new filterHolder();
 
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
             v = inflater.inflate(R.layout.drawer_list_item, parent, false);
             holder.category = v.findViewById(R.id.category);
             holder.check = v.findViewById(R.id.checkbox);

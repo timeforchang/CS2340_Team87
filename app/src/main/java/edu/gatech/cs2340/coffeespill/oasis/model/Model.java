@@ -11,8 +11,8 @@ import edu.gatech.cs2340.coffeespill.oasis.data.UserManager;
 
 public class Model {
     private static Model _instance;
-    private ShelterManager sm;
-    private UserManager um;
+    final private ShelterManager sm;
+    final private UserManager um;
 
     private Model() {
         sm = new ShelterManager();

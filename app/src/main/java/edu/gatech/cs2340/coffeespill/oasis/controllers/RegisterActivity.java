@@ -70,6 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser(final String email, final String pass) {
         auth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @SuppressWarnings("ConstantConditions")
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(!task.isSuccessful()) {

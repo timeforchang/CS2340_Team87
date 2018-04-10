@@ -37,6 +37,7 @@ public class Shelter implements Parcelable {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
     }
@@ -53,6 +54,7 @@ public class Shelter implements Parcelable {
         return restrictions;
     }
 
+    @SuppressWarnings("unused")
     public void setRestrictions(String restrictions) {
         this.restrictions = restrictions;
     }
@@ -61,6 +63,7 @@ public class Shelter implements Parcelable {
         return longitude;
     }
 
+    @SuppressWarnings("unused")
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
@@ -69,6 +72,7 @@ public class Shelter implements Parcelable {
         return latitude;
     }
 
+    @SuppressWarnings("unused")
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
@@ -77,6 +81,7 @@ public class Shelter implements Parcelable {
         return address;
     }
 
+    @SuppressWarnings("unused")
     public void setAddress(String address) {
         this.address = address;
     }
@@ -85,6 +90,7 @@ public class Shelter implements Parcelable {
         return notes;
     }
 
+    @SuppressWarnings("unused")
     public void setNotes(String notes) {
         this.notes = notes;
     }
@@ -93,6 +99,7 @@ public class Shelter implements Parcelable {
         return phone;
     }
 
+    @SuppressWarnings("unused")
     public void setPhone(String phone) {
         this.phone = phone;
     }

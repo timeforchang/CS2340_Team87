@@ -24,6 +24,7 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
 public class LoginActivity extends AppCompatActivity {
     private EditText loginEmail, loginPass;
     private FirebaseAuth auth;
+    @SuppressWarnings({"CanBeFinal", "WeakerAccess"})
     Model model = Model.getInstance();
 
     @Override

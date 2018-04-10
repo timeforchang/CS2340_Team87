@@ -21,9 +21,11 @@ import edu.gatech.cs2340.coffeespill.oasis.model.Shelter;
  * Created by andrew_chang on 2018-03-22.
  */
 
+@SuppressWarnings("ALL")
 public class ShelterManager {
     private FirebaseFirestore mDB;
     private String FIRE_LOG = "Fire_log";
+    @SuppressWarnings("UnusedAssignment")
     List<Shelter> shelters = new ArrayList<>();
 
     public ShelterManager() {
