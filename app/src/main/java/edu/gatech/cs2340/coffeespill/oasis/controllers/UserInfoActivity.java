@@ -1,22 +1,16 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
-import edu.gatech.cs2340.coffeespill.oasis.Model.User;
+import edu.gatech.cs2340.coffeespill.oasis.model.Model;
+import edu.gatech.cs2340.coffeespill.oasis.model.User;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -24,11 +18,8 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
  */
 
 public class UserInfoActivity extends AppCompatActivity {
-    private Button logout;
-    private TextView userEmail;
     private FirebaseAuth auth;
     Model model = Model.getInstance();
-    private User u;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +41,10 @@ public class UserInfoActivity extends AppCompatActivity {
 //        }
 
 
-        logout = (Button) findViewById(R.id.logout);
-        u = model.getUser();
+        Button logout = findViewById(R.id.logout);
+        User u = model.getUser();
 
-        userEmail = (TextView) findViewById(R.id.userEmail);
+        TextView userEmail = findViewById(R.id.userEmail);
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {

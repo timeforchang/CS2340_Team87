@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -33,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
-import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
+import edu.gatech.cs2340.coffeespill.oasis.model.Model;
+import edu.gatech.cs2340.coffeespill.oasis.model.Shelter;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -65,7 +64,7 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
         setContentView(R.layout.activity_shelter_list);
         mDB = FirebaseFirestore.getInstance();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (Build.VERSION.SDK_INT >= 21) {
@@ -87,13 +86,13 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
 
         if (!s.isEmpty()) {
             adapter = new CustomShelterAdapter(this, s);
-            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+            RecyclerView recView = findViewById(R.id.rvShelters);
             recView.setAdapter(adapter);
         }
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         sideA = new SidebarAdapter(this, categories);
-        this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        this.mDrawerList = findViewById(R.id.left_drawer);
         this.mDrawerList.setAdapter(sideA);
 
         final Handler timerHandler;
@@ -124,7 +123,7 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
             System.out.println("cap: " + shelter.getCapacity());
         }
         adapter = new CustomShelterAdapter(this, s);
-        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+        RecyclerView recView = findViewById(R.id.rvShelters);
         recView.setAdapter(adapter);
     }
 
@@ -140,10 +139,10 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.listmenu, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-        TextView textView = (TextView) searchView.findViewById(id);
+        TextView textView = searchView.findViewById(id);
         textView.setTextColor(Color.WHITE);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -163,7 +162,7 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                     }
                 }
                 adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+                RecyclerView recView = findViewById(R.id.rvShelters);
                 recView.setAdapter(adapter);
                 return true;
             }
@@ -181,27 +180,29 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.profile) {
-            //displayCategories();
-            //Log.d("test", mDrawerLayout.toString());
-            startActivity(new Intent(getApplicationContext(), UserInfoActivity.class));
-            return true;
-        } else if (id == R.id.search) {
-            return true;
-        } else if (id == R.id.filter) {
-            //displayCategories();
-            //Log.d("test", mDrawerLayout.toString());
-            mDrawerLayout.openDrawer(mDrawerList);
-            return true;
-        } else if (id == R.id.refresh) {
-            model.refresh();
-            s = model.getShelters();
-            adapter = new CustomShelterAdapter(this, s);
-            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-            recView.setAdapter(adapter);
-        } else if (id == R.id.maps) {
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-            return true;
+        switch (id) {
+            case R.id.profile:
+                //displayCategories();
+                //Log.d("test", mDrawerLayout.toString());
+                startActivity(new Intent(getApplicationContext(), UserInfoActivity.class));
+                return true;
+            case R.id.search:
+                return true;
+            case R.id.filter:
+                //displayCategories();
+                //Log.d("test", mDrawerLayout.toString());
+                mDrawerLayout.openDrawer(mDrawerList);
+                return true;
+            case R.id.refresh:
+                model.refresh();
+                s = model.getShelters();
+                adapter = new CustomShelterAdapter(this, s);
+                RecyclerView recView = findViewById(R.id.rvShelters);
+                recView.setAdapter(adapter);
+                break;
+            case R.id.maps:
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -222,325 +223,30 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
             Category c = categories.get(pos);
             c.setSelected(b);
             if (b) {
-                if (pos == 0) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "men")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            f.add(shelter);
-                                        }
-
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 1) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 2) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            f.add(shelter);
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                } else if(pos == 3) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            f.add(shelter);
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                } else if(pos == 4) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                } else {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            f.add(shelter);
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            f.add(shelter);
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!f.contains(shelter)) {
-                                                f.add(shelter);
-                                            }
-                                        }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    if(!categories.get(0).isSelected() && !categories.get(1).isSelected()) {
+                switch (pos) {
+                    case 0:
                         mDB.collection("shelters").whereEqualTo("restrictions", "men")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                f.add(shelter);
+                                            }
+
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        break;
+                    case 1:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -553,7 +259,52 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                                                 }
                                             }
                                             adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        break;
+                    case 2:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                f.add(shelter);
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        break;
+                    case 3:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                f.add(shelter);
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
                                             recView.setAdapter(adapter);
                                         } else {
                                             Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
@@ -573,362 +324,626 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                                                 }
                                             }
                                             adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
                                             recView.setAdapter(adapter);
                                         } else {
                                             Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
                                     }
                                 });
-                        for (int i = 0; i < 2; i++) {
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        break;
+                    case 4:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        break;
+                    default:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                f.add(shelter);
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                f.add(shelter);
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!f.contains(shelter)) {
+                                                    f.add(shelter);
+                                                }
+                                            }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected()) {
+                            mDB.collection("shelters").whereEqualTo("restrictions", "men")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (DocumentSnapshot document : task.getResult()) {
+                                                    Shelter shelter = document.toObject(Shelter.class);
+                                                    if (!f.contains(shelter)) {
+                                                        f.add(shelter);
+                                                    }
+                                                }
+                                                adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                                RecyclerView recView = findViewById(R.id.rvShelters);
+                                                recView.setAdapter(adapter);
+                                            } else {
+                                                Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                            }
+                                        }
+                                    });
+                            mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (DocumentSnapshot document : task.getResult()) {
+                                                    Shelter shelter = document.toObject(Shelter.class);
+                                                    if (!f.contains(shelter)) {
+                                                        f.add(shelter);
+                                                    }
+                                                }
+                                                adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                                RecyclerView recView = findViewById(R.id.rvShelters);
+                                                recView.setAdapter(adapter);
+                                            } else {
+                                                Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                            }
+                                        }
+                                    });
+                            for (int i = 0; i < 2; i++) {
+                                Category a = categories.get(i);
+                                a.setSelected(true);
+                            }
+                            sideA = new SidebarAdapter(this, categories);
+                            //Log.d("test", sideA.toString());
+                            this.mDrawerList = findViewById(R.id.left_drawer);
+                            this.mDrawerList.setAdapter(sideA);
+                        }
+                        for (int i = 2; i < 5; i++) {
                             Category a = categories.get(i);
-                            a.setSelected(true);
+                            a.setSelected(false);
                         }
                         sideA = new SidebarAdapter(this, categories);
                         //Log.d("test", sideA.toString());
-                        this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                        this.mDrawerList = findViewById(R.id.left_drawer);
                         this.mDrawerList.setAdapter(sideA);
-                    }
-                    for (int i = 2; i < 5; i++) {
-                        Category a = categories.get(i);
-                        a.setSelected(false);
-                    }
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
+                        break;
                 }
             } else {
-                if (pos == 0) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "men")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                switch (pos) {
+                    case 0:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "men")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
-                            !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
-                        f.clear();
-                        displayAll();
-                    }
-                } else if (pos == 1) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
+                                !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
+                            f.clear();
+                            displayAll();
+                        }
+                        break;
+                    case 1:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
-                            !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
-                        f.clear();
-                        displayAll();
-                    }
-                } else if (pos == 2) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
+                                !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
+                            f.clear();
+                            displayAll();
+                        }
+                        break;
+                    case 2:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
-                            !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
-                        f.clear();
-                        displayAll();
-                    }
-                } else if(pos == 3) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
+                                !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
+                            f.clear();
+                            displayAll();
+                        }
+                        break;
+                    case 3:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
-                            !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
-                        f.clear();
-                        displayAll();
-                    }
-                } else if(pos == 4) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
+                                !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
+                            f.clear();
+                            displayAll();
+                        }
+                        break;
+                    case 4:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
-                            !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
-                        f.clear();
-                        displayAll();
-                    }
-                }  else {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
+                                !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
+                            f.clear();
+                            displayAll();
+                        }
+                        break;
+                    default:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = f.indexOf(shelter);
-                                            if (index >= 0) {
-                                                f.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = f.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    f.remove(index);
+                                                }
                                             }
+                                            adapter = new CustomShelterAdapter(getApplicationContext(), f);
+                                            RecyclerView recView = findViewById(R.id.rvShelters);
+                                            recView.setAdapter(adapter);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                        adapter = new CustomShelterAdapter(getApplicationContext(), f);
-                                        RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
-                                        recView.setAdapter(adapter);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
-                            !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
-                        f.clear();
-                        displayAll();
-                    }
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected() && !categories.get(2).isSelected() &&
+                                !categories.get(3).isSelected() && !categories.get(4).isSelected() && !categories.get(5).isSelected()) {
+                            f.clear();
+                            displayAll();
+                        }
+                        break;
                 }
             }
 
@@ -944,7 +959,7 @@ public class ShelterListActivity extends AppCompatActivity implements android.wi
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             adapter = new CustomShelterAdapter(getApplicationContext(), s);
-                            RecyclerView recView = (RecyclerView) findViewById(R.id.rvShelters);
+                            RecyclerView recView = findViewById(R.id.rvShelters);
                             recView.setAdapter(adapter);
                         } else {
                             Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());

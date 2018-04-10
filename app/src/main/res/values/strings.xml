@@ -3,17 +3,42 @@
     <string name="enter_password">enter password</string>
     <string name="enter_email">enter email</string>
     <string name="login">Login</string>
-    <string name="title_activity_shelter_display">ShelterDisplay</string>
     <string name="filter">Filter</string>
-    <string-array name="filters">
-        <item>Men</item>
-        <item>Women</item>
-        <item>Families with newborns</item>
-        <item>Children</item>
-        <item>Young Adults</item>
-        <item>Anyone</item>
-    </string-array>
     <string name="title_activity_maps">Map</string>
     <string name="shelter_list">Shelter List</string>
     <string name="shelters_map">Shelters Map</string>
+
+    <string name="shelterName">Shelters Name</string>
+    <string name="capacity">Capacity</string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
+    <string name="restrictions">Restrictions</string>
+    <string name="notes">Notes</string>
+    <string name="checkInPrompt">Check In!</string>
+    <string name="checkOutPrompt">Check Out</string>
+    <string name="checkNumPrompt">Number of people to check in</string>
+    <string name="checkedInError">You are checked into a different shelter!</string>
+
+    <string name="search">Search</string>
+    <string name="refresh">Refresh</string>
+    <string name="profile">Profile</string>
+
+    <string name="welcome">Welcome to Oasis</string>
+    <string name="register">Register</string>
+
+    <string name="loginEmail">Login Email</string>
+    <string name="emailHint">email here</string>
+    <string name="logout">Logout</string>
+    <string name="userInfo">User Info</string>
+
+    <string name="name">Name</string>
+    <string name="registerPrompt">Register and Login!</string>
+    <string name="userType">User Type</string>
+
+    <string name="textView">TextView</string>
+
+    <string name="descCap">Space Remaining: %d</string>
+    <string name="descResc">Restrictions: %s</string>
+    <string name="descNotes">Notes: %s</string>
+    <string name="emptyError">There are no more vacancies left in this shelter!</string>
 </resources>

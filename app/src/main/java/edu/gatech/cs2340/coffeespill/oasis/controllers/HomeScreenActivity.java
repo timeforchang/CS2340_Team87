@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 public class HomeScreenActivity extends AppCompatActivity {
-    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
             Intent intent = new Intent(HomeScreenActivity.this, ShelterListActivity.class);
@@ -26,7 +25,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             finish();
         }
 
-        Button login = (Button) findViewById(R.id.gotologin);
+        Button login = findViewById(R.id.gotologin);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,7 +35,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         });
 
-        Button register = (Button) findViewById(R.id.gotoregister);
+        Button register = findViewById(R.id.gotoregister);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

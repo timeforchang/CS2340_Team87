@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -66,9 +66,9 @@ public class SidebarAdapter extends ArrayAdapter<Category> {
 
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.drawer_list_item, null);
-            holder.category = (TextView) v.findViewById(R.id.category);
-            holder.check = (CheckBox) v.findViewById(R.id.checkbox);
+            v = inflater.inflate(R.layout.drawer_list_item, parent, false);
+            holder.category = v.findViewById(R.id.category);
+            holder.check = v.findViewById(R.id.checkbox);
 
             holder.check.setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) con);
             v.setTag(holder);

@@ -1,9 +1,9 @@
-package edu.gatech.cs2340.coffeespill.oasis.Model;
+package edu.gatech.cs2340.coffeespill.oasis.model;
 
 import java.util.List;
 
-import edu.gatech.cs2340.coffeespill.oasis.Data.ShelterManager;
-import edu.gatech.cs2340.coffeespill.oasis.Data.UserManager;
+import edu.gatech.cs2340.coffeespill.oasis.data.ShelterManager;
+import edu.gatech.cs2340.coffeespill.oasis.data.UserManager;
 
 /**
  * Created by andrew_chang on 2018-02-13.
@@ -13,8 +13,6 @@ public class Model {
     private static Model _instance;
     private ShelterManager sm;
     private UserManager um;
-    private User user;
-    private List<Shelter> shelters;
 
     private Model() {
         sm = new ShelterManager();
@@ -29,13 +27,11 @@ public class Model {
     }
 
     public List<Shelter> getShelters() {
-        shelters = sm.getAll();
-        return shelters;
+        return sm.getAll();
     }
 
     public User getUser() {
-        user = um.getData();
-        return user;
+        return um.getData();
     }
 
     public void checkin(Shelter s, int checkNum) {

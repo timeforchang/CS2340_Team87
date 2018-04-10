@@ -1,6 +1,5 @@
-package edu.gatech.cs2340.coffeespill.oasis.Data;
+package edu.gatech.cs2340.coffeespill.oasis.data;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -16,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
+import edu.gatech.cs2340.coffeespill.oasis.model.Shelter;
 
 /**
  * Created by andrew_chang on 2018-03-22.

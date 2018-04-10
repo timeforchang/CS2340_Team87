@@ -1,6 +1,5 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
@@ -29,8 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
-import edu.gatech.cs2340.coffeespill.oasis.Model.Shelter;
+import edu.gatech.cs2340.coffeespill.oasis.model.Model;
+import edu.gatech.cs2340.coffeespill.oasis.model.Shelter;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, android.widget.CompoundButton.OnCheckedChangeListener {
@@ -42,7 +41,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             , new Category("Young Adults"), new Category("Anyone")));
     SidebarAdapter sideA;
     private GoogleMap mMap;
-    private Model model;
     private List<Shelter> shelters;
     private List<Shelter> filtered = new ArrayList<>();
     private FirebaseFirestore mDB;
@@ -54,7 +52,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
 
         mDB = FirebaseFirestore.getInstance();
-        model = Model.getInstance();
+        Model model = Model.getInstance();
         shelters = model.getShelters();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -62,12 +60,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         sideA = new SidebarAdapter(this, categories);
-        this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        this.mDrawerList = findViewById(R.id.left_drawer);
         this.mDrawerList.setAdapter(sideA);
 
     }
@@ -133,289 +131,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Category c = categories.get(pos);
             c.setSelected(b);
             if (b) {
-                if (pos == 0) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "men")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 1) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 2) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            filtered.add(shelter);
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                } else if (pos == 3) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            filtered.add(shelter);
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                } else if (pos == 4) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    categories.get(5).setSelected(false);
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
-                } else {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            filtered.add(shelter);
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            filtered.add(shelter);
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            if (!filtered.contains(shelter)) {
-                                                filtered.add(shelter);
-                                            }
-                                        }
-                                        reDisplayMarkers(filtered);
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    if (!categories.get(0).isSelected() && !categories.get(1).isSelected()) {
+                switch (pos) {
+                    case 0:
                         mDB.collection("shelters").whereEqualTo("restrictions", "men")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -427,6 +144,66 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                                 if (!filtered.contains(shelter)) {
                                                     filtered.add(shelter);
                                                 }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        break;
+                    case 1:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        break;
+                    case 2:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                filtered.add(shelter);
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        break;
+                    case 3:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                filtered.add(shelter);
                                             }
                                             reDisplayMarkers(filtered);
                                         } else {
@@ -452,376 +229,611 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         }
                                     }
                                 });
-                        for (int i = 0; i < 2; i++) {
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        break;
+                    case 4:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        categories.get(5).setSelected(false);
+                        sideA = new SidebarAdapter(this, categories);
+                        //Log.d("test", sideA.toString());
+                        this.mDrawerList = findViewById(R.id.left_drawer);
+                        this.mDrawerList.setAdapter(sideA);
+                        break;
+                    default:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                filtered.add(shelter);
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                filtered.add(shelter);
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                if (!filtered.contains(shelter)) {
+                                                    filtered.add(shelter);
+                                                }
+                                            }
+                                            reDisplayMarkers(filtered);
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        if (!categories.get(0).isSelected() && !categories.get(1).isSelected()) {
+                            mDB.collection("shelters").whereEqualTo("restrictions", "men")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (DocumentSnapshot document : task.getResult()) {
+                                                    Shelter shelter = document.toObject(Shelter.class);
+                                                    if (!filtered.contains(shelter)) {
+                                                        filtered.add(shelter);
+                                                    }
+                                                }
+                                                reDisplayMarkers(filtered);
+                                            } else {
+                                                Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                            }
+                                        }
+                                    });
+                            mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (DocumentSnapshot document : task.getResult()) {
+                                                    Shelter shelter = document.toObject(Shelter.class);
+                                                    if (!filtered.contains(shelter)) {
+                                                        filtered.add(shelter);
+                                                    }
+                                                }
+                                                reDisplayMarkers(filtered);
+                                            } else {
+                                                Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                            }
+                                        }
+                                    });
+                            for (int i = 0; i < 2; i++) {
+                                Category a = categories.get(i);
+                                a.setSelected(true);
+                            }
+                            sideA = new SidebarAdapter(this, categories);
+                            //Log.d("test", sideA.toString());
+                            this.mDrawerList = findViewById(R.id.left_drawer);
+                            this.mDrawerList.setAdapter(sideA);
+                        }
+                        for (int i = 2; i < 5; i++) {
                             Category a = categories.get(i);
-                            a.setSelected(true);
+                            a.setSelected(false);
                         }
                         sideA = new SidebarAdapter(this, categories);
                         //Log.d("test", sideA.toString());
-                        this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
+                        this.mDrawerList = findViewById(R.id.left_drawer);
                         this.mDrawerList.setAdapter(sideA);
-                    }
-                    for (int i = 2; i < 5; i++) {
-                        Category a = categories.get(i);
-                        a.setSelected(false);
-                    }
-                    sideA = new SidebarAdapter(this, categories);
-                    //Log.d("test", sideA.toString());
-                    this.mDrawerList = (ListView) findViewById(R.id.left_drawer);
-                    this.mDrawerList.setAdapter(sideA);
+                        break;
                 }
             } else {
-                if (pos == 0) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "men")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                switch (pos) {
+                    case 0:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "men")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 1) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                } else if (pos == 2) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        break;
+                    case 1:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 3) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        break;
+                    case 2:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        break;
+                    case 3:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else if (pos == 4) {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                } else {
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
-                                        } else {
-                                            reDisplayMarkers(filtered);
-                                        }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
-                                    }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
-                    mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (DocumentSnapshot document : task.getResult()) {
-                                            Shelter shelter = document.toObject(Shelter.class);
-                                            int index = filtered.indexOf(shelter);
-                                            if (index >= 0) {
-                                                filtered.remove(index);
+                                });
+                        break;
+                    case 4:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
                                             }
-                                        }
-                                        if (filtered.size() == 0) {
-                                            reDisplayMarkers(shelters);
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
                                         } else {
-                                            reDisplayMarkers(filtered);
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                         }
-                                    } else {
-                                        Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                                     }
-                                }
-                            });
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        break;
+                    default:
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ newborns")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "women/children")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "children/young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "young adults")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        mDB.collection("shelters").whereEqualTo("restrictions", "families w/ children under 5")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (DocumentSnapshot document : task.getResult()) {
+                                                Shelter shelter = document.toObject(Shelter.class);
+                                                int index = filtered.indexOf(shelter);
+                                                if (index >= 0) {
+                                                    filtered.remove(index);
+                                                }
+                                            }
+                                            if (filtered.size() == 0) {
+                                                reDisplayMarkers(shelters);
+                                            } else {
+                                                reDisplayMarkers(filtered);
+                                            }
+                                        } else {
+                                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
+                                        }
+                                    }
+                                });
+                        break;
                 }
             }
 

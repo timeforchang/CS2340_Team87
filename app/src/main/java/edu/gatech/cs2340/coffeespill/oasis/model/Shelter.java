@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.coffeespill.oasis.Model;
+package edu.gatech.cs2340.coffeespill.oasis.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.Model;
+import edu.gatech.cs2340.coffeespill.oasis.model.Model;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -22,7 +22,6 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
  */
 
 public class LoginActivity extends AppCompatActivity {
-    private Button login;
     private EditText loginEmail, loginPass;
     private FirebaseAuth auth;
     Model model = Model.getInstance();
@@ -31,13 +30,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        login = (Button) findViewById(R.id.login);
-        loginEmail = (EditText) findViewById(R.id.loginEmail);
-        loginPass = (EditText) findViewById(R.id.loginPass);
+        Button login = findViewById(R.id.login);
+        loginEmail = findViewById(R.id.loginEmail);
+        loginPass = findViewById(R.id.loginPass);
 
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(LoginActivity.this, UserInfoActivity.class);
+            Intent intent = new Intent(LoginActivity.this, ShelterListActivity.class);
             startActivity(intent);
             finish();
         }

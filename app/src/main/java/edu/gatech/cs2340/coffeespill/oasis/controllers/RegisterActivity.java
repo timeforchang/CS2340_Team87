@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.coffeespill.oasis.Controllers;
+package edu.gatech.cs2340.coffeespill.oasis.controllers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.gatech.cs2340.coffeespill.oasis.Model.User;
+import edu.gatech.cs2340.coffeespill.oasis.model.User;
 import edu.gatech.cs2340.coffeespill.oasis.R;
 
 /**
@@ -29,7 +29,6 @@ import edu.gatech.cs2340.coffeespill.oasis.R;
  */
 
 public class RegisterActivity extends AppCompatActivity {
-    private Button register;
     private EditText registerEmail, registerPass, registerName;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -40,13 +39,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        register = (Button) findViewById(R.id.register);
-        registerEmail = (EditText) findViewById(R.id.registerEmail);
-        registerPass = (EditText) findViewById(R.id.registerPass);
-        typeSpinner = (Spinner) findViewById(R.id.userTypeSpinner);
-        registerName = (EditText) findViewById(R.id.registerName);
+        Button register = findViewById(R.id.register);
+        registerEmail = findViewById(R.id.registerEmail);
+        registerPass = findViewById(R.id.registerPass);
+        typeSpinner = findViewById(R.id.userTypeSpinner);
+        registerName = findViewById(R.id.registerName);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, User.userTypes);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, User.userTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         typeSpinner.setAdapter(adapter);
 
@@ -82,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Map<String, Object> newUser = new HashMap<>();
                     newUser.put("_id", auth.getCurrentUser().getUid());
                     newUser.put("_username", registerName.getText().toString());
-                    newUser.put("_type", (String) typeSpinner.getSelectedItem());
+                    newUser.put("_type", typeSpinner.getSelectedItem());
                     newUser.put("_locked", false);
                     newUser.put("_contact", email);
                     newUser.put("_pWord", pass);
