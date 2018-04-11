@@ -36,28 +36,30 @@ public class UserManager {
 
     @SuppressWarnings("ConstantConditions")
     public User getData() {
-        System.out.println(auth.getCurrentUser().getEmail());
-        mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                User user = document.toObject(User.class);
-                                if (user == null) {
-                                    System.out.println("null");
-                                } else {
-                                    curUser = user;
-                                    System.out.println(user);
-                                    System.out.println(auth.getCurrentUser().getEmail());
+        //System.out.println(auth.getCurrentUser().getEmail());
+        if (auth.getCurrentUser() != null) {
+            mDB.collection("users").whereEqualTo("_contact", auth.getCurrentUser().getEmail())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    User user = document.toObject(User.class);
+                                    if (user == null) {
+                                        System.out.println("null");
+                                    } else {
+                                        curUser = user;
+                                        System.out.println(user);
+                                        //System.out.println(auth.getCurrentUser().getEmail());
+                                    }
                                 }
+                            } else {
+                                Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                             }
-                        } else {
-                            Log.d(FIRE_LOG, "Error getting documents: " + task.getException().getMessage());
                         }
-                    }
-                });
+                    });
+        }
         return curUser;
     }
 

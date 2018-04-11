@@ -26,29 +26,13 @@ public class UserInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            Window window = this.getWindow();
-//            // clear FLAG_TRANSLUCENT_STATUS flag:
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//
-//            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//
-//            // finally change the color
-//            window.setStatusBarColor(this.getResources().getColor(R.color.black));
-//        }
-
-
         Button logout = findViewById(R.id.logout);
         User u = model.getUser();
 
         TextView userEmail = findViewById(R.id.userEmail);
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
+        if (auth.getCurrentUser() != null && u != null) {
             userEmail.setText(u.get_contact());
         }
         logout.setOnClickListener(new View.OnClickListener() {
@@ -58,38 +42,6 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
     }
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.user_info_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.shelterList) {
-//
-//            startActivity(new Intent(getApplicationContext(), ShelterListActivity.class));
-//            return true;
-//
-//        } else if (id == R.id.shelterMap) {
-//
-//            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-//            return true;
-//
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
 
     @Override
     public void onBackPressed() {
