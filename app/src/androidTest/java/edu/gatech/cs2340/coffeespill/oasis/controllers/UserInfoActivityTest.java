@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class UserInfoActivityTest {
     @Rule
-    public IntentsTestRule<UserInfoActivity> mActivityRule = new IntentsTestRule<>(UserInfoActivity.class);
+    public final IntentsTestRule<UserInfoActivity> mActivityRule = new IntentsTestRule<>(UserInfoActivity.class);
 
     @Test
     public void backPressed() {

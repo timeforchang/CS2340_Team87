@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                     snack.show();
                 } else {
                     model.refresh();
-                    startActivity(new Intent(LoginActivity.this, UserInfoActivity.class));
+                    startActivity(new Intent(LoginActivity.this, ShelterListActivity.class));
                     finish();
                 }
             }
